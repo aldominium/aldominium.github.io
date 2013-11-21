@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Parcial (Three.js)</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel=stylesheet href="css/base.css"/>
+</head>
+<body>
+
+<script src="js/Three.js"></script>
+
+<script src="js/THREEx.FullScreen.js"></script>
+<script src="js/THREEx.WindowResize.js"></script>
+
+<!-- jQuery code to display an information button and box when clicked. -->
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/jquery-ui.js"></script>
+<link rel=stylesheet href="css/jquery-ui.css" />
+<link rel=stylesheet href="css/info.css"/>
+<script src="js/info.js"></script>
+<div id="infoButton"></div>
+<div id="infoBox" title="Demo Information">
+Examen final de Graficas Computacionales de Aldo Olivares Dominguez, ver online en
+<a href="http://aldominium.github.io/three/parcial.html">http://aldominium.github.io/three/parcial.html</a>
+</div>
+<!-- ------------------------------------------------------------ -->
+
+<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+<script>
+/*
+	Author: Aldo Olivares Dominguez
+	Date: November 2013
+	Basado en los ejemplos de stemosky
+
+*/
+
+// MAIN
+
+// standard global variables
+var container, scene, camera, renderer, controls, stats;
+//var keyboard = new THREEx.KeyboardState();
+//var clock = new THREE.Clock();
+// custom global variables
+var cube;
+
+//init();
+//animate();
+
+
+            // agregamos el "listener" para "escuchar" los eventos del teclado
+            
+             window.addEventListener('keydown',doKeyDown,true); 
+            var cam_zpos = 100.0;
+            var cam_xpos = 0.0;
+            var Pi = 3.1415926535;
+            var ang_rad = 0;
+            var up_down_ang = 0;           
+
+            function doKeyDown(evt){
+                console.log("Tecla picada: "+evt.keyCode);
+                switch (evt.keyCode) {
+                    case 38:  /* Up arrow was pressed */                        
+                        var dx = 3 * Math.sin(ang_rad); 
+                        var dz = 3 * Math.cos(ang_rad); 
+                        cam_zpos -= dz;
+                        cam_xpos -= dx;
+                        break;
+                    case 40:  /* Down arrow was pressed */
+                        var dx = 3 * Math.sin(ang_rad); 
+                        var dz = 3 * Math.cos(ang_rad); 
+                        cam_zpos += dz;
+                        cam_xpos += dx;
+                        break;
+                    case 37:  /* Left arrow was pressed */
+                        ang_rad += (5* Pi / 180);                        
+                        break;
+                    case 39:  /* Right arrow was pressed */
+                        ang_rad -= (5* Pi / 180);
+                    break;
+                    case 87:  /* W was pressed */
+                    	camera.position.y += 3;
+                        /*var dx = 0.5 * Math.sin(ang_rad+(Pi/2)); 
+                        var dz = 0.5 * Math.cos(ang_rad+(Pi/2)); 
+                        cam_zpos -= dz;
+                        cam_xpos -= dx; */                  
+                    break;
+                    case 83:  /* S was pressed */
+                        camera.position.y -= 3;
+                        /*var dx = 0.5 * Math.sin(ang_rad-(Pi/2)); 
+                        var dz = 0.5 * Math.cos(ang_rad-(Pi/2)); 
+                        cam_zpos -= dz;
+                        cam_xpos -= dx;*/                         
+                    break;
+                    case 65:  /* A was pressed */                        
+                       //camera.position.y -= 0.5;
+                       var dx = 3 * Math.sin(ang_rad+(Pi/2)); 
+                        var dz = 3 * Math.cos(ang_rad+(Pi/2)); 
+                        cam_zpos -= dz;
+                        cam_xpos -= dx; 
+                    break;
+                    case 68:  /* D was pressed */
+                        //camera.position.y += 0.5;
+                        var dx = 3 * Math.sin(ang_rad-(Pi/2)); 
+                        var dz = 3 * Math.cos(ang_rad-(Pi/2)); 
+                        cam_zpos -= dz;
+                        cam_xpos -= dx;                   
+                    break;
+                    case 82:  /* R was pressed */
+                    break;
+                    case 70:  /* F was pressed */
+                    break;
+                }
+            }
+
+
+// FUNCTIONS 		
+/*function init() 
+{*/
+	//CONTROLES
+
+	
+
+	// SCENE
+	scene = new THREE.Scene();
+	// CAMERA
+	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+	scene.add(camera);
+	camera.position.set(0,150,400);
+	
+
+	
+	renderer = new THREE.WebGLRenderer( {antialias:true} );
+	
+	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	container = document.getElementById( 'ThreeJS' );
+	container.appendChild( renderer.domElement );
+
+	
+	//LIGHT
+	var light = new THREE.PointLight(0xcccccc,.4);
+	light.position.set(0,250,0);
+	scene.add(light);
+	//light.shadowCameraVisible = true;
+	
+	// SKYBOX/FOG
+	var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
+	var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
+	var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
+	// scene.add(skyBox);
+	scene.fog = new THREE.FogExp2( 0x9999ff, 0.00025 );
+	
+	////////////
+	// CUSTOM //
+	////////////
+
+	// must enable shadows on the renderer 
+	renderer.shadowMapEnabled = true;
+	
+	// "shadow cameras" show the light source and direction
+	
+	// spotlight #1 -- yellow, dark shadow
+	var spotlight = new THREE.SpotLight(0xffff00);
+	spotlight.position.set(-60,150,-30);
+	spotlight.shadowCameraVisible = true;
+	spotlight.shadowDarkness = 0.95;
+	spotlight.intensity = 2;
+	// must enable shadow casting ability for the light
+	spotlight.castShadow = true;
+	scene.add(spotlight);
+
+	// spotlight #2 -- red, light shadow
+	var spotlight2 = new THREE.SpotLight(0xff0000);
+	spotlight2.position.set(60,150,-60);
+	scene.add(spotlight2);
+	spotlight2.shadowCameraVisible = true;
+	spotlight2.shadowDarkness = 0.70;
+	spotlight2.intensity = 2;
+	spotlight2.castShadow = true;
+	
+	// spotlight #3
+	var spotlight3 = new THREE.SpotLight(0x0000ff);
+	spotlight3.position.set(150,180,-100);
+	spotlight3.shadowCameraVisible = true;
+	spotlight3.shadowDarkness = 0.95;
+	spotlight3.intensity = 4;
+	spotlight3.castShadow = true;
+	scene.add(spotlight3);
+	// change the direction this spotlight is facing
+	var lightTarget = new THREE.Object3D();
+	lightTarget.position.set(150,10,-100);
+	scene.add(lightTarget);
+	lightTarget.position.z += 2;
+	spotlight3.target = lightTarget;
+
+	// cube: mesh to cast shadows
+	var cubeGeometry = new THREE.CubeGeometry( 50, 50, 50 );
+	var cubeMaterial = new THREE.MeshLambertMaterial( { color: 0x888888 } );
+	cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
+	cube.position.set(0,50,0);
+	// Note that the mesh is flagged to cast shadows
+	cube.castShadow = true;
+	scene.add(cube);
+	
+	// floor: mesh to receive shadows
+	var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
+	floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
+	floorTexture.repeat.set( 10, 10 );
+	// Note the change to Lambert material.
+	var floorMaterial = new THREE.MeshLambertMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+	var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
+	var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+	floor.position.y = -0.5;
+	floor.rotation.x = Math.PI / 2;
+	// Note the mesh is flagged to receive shadows
+	floor.receiveShadow = true;
+	scene.add(floor);
+	
+	// create "light-ball" meshes
+	var sphereGeometry = new THREE.SphereGeometry( 10, 16, 8 );
+	var darkMaterial = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+		
+	var wireframeMaterial = new THREE.MeshBasicMaterial( 
+		{ color: 0xffff00, wireframe: true, transparent: true } ); 
+	var shape = THREE.SceneUtils.createMultiMaterialObject( 
+		sphereGeometry, [ darkMaterial, wireframeMaterial ] );
+	shape.position = spotlight.position;
+	scene.add( shape );
+	
+	var wireframeMaterial = new THREE.MeshBasicMaterial( 
+		{ color: 0xff0000, wireframe: true, transparent: true } ); 
+	var shape = THREE.SceneUtils.createMultiMaterialObject( 
+		sphereGeometry, [ darkMaterial, wireframeMaterial ] );
+	shape.position = spotlight2.position;
+	scene.add( shape );
+	
+	var wireframeMaterial = new THREE.MeshBasicMaterial( 
+		{ color: 0x0000ff, wireframe: true, transparent: true } ); 
+	var shape = THREE.SceneUtils.createMultiMaterialObject( 
+		sphereGeometry, [ darkMaterial, wireframeMaterial ] );
+	shape.position = spotlight3.position;
+	scene.add( shape );
+
+	//AXIS HELPER ---AYUDARME CON LAS COORDENADAS
+	//AZUL Z (PROFUNDIDAD)
+	//VERDE Y (ALTURA)
+	//ROJO X
+	var axes = new THREE.AxisHelper(500);
+	scene.add( axes );
+
+//}
+
+
+
+var arriba = true;
+
+var render = function() 
+{	
+
+	console.log(lightTarget.position.z);
+
+	if(lightTarget.position.z > 30)
+		arriba = false;
+	if(lightTarget.position.z < -180)
+		arriba = true;
+	if(arriba)
+		lightTarget.position.z += .9;
+	else
+		lightTarget.position.z -= .9;
+	//if(lightTarget.position.z > -30)
+	//	lightTarget.position.z -= .9;
+	camera.position.x = cam_xpos;
+    camera.position.z = cam_zpos;
+    camera.rotation.y = ang_rad;
+    //spotlight2.target.z += 0.1;
+    //spotlight3.target = lightTarget.position.set(150,10,-100);
+    requestAnimationFrame(render);
+	renderer.render( scene, camera );
+	console.log(2);
+	 
+              
+}
+render();
+
+</script>
+
+</body>
+</html>
