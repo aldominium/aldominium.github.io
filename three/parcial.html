@@ -51,7 +51,7 @@ var cube;
             // agregamos el "listener" para "escuchar" los eventos del teclado
             
              window.addEventListener('keydown',doKeyDown,true); 
-            var cam_zpos = 100.0;
+            var cam_zpos = 700.0;
             var cam_xpos = 0.0;
             var Pi = 3.1415926535;
             var ang_rad = 0;
@@ -156,25 +156,169 @@ var cube;
 	// CUSTOM //
 	////////////
 
-	//Ferri Roulette
+	//------------------------------
+	//----------Ferri Roulette------
+	//------------------------------
 
 	var grupo_ruletacompleta = new THREE.Object3D();
+	var grupo_ruedaruleta = new THREE.Object3D();
+	var grupo_cabinaruleta1 = new THREE.Object3D();
+	var grupo_ejes = new THREE.Object3D();
+	var grupo_ejes2 = new THREE.Object3D();
+	var grupo_soportes = new THREE.Object3D();
+	var grupo_soportes2 = new THREE.Object3D();
+	var grupo_soportes3 = new THREE.Object3D();
+	
+
+
 
 	var woodTexture = new THREE.ImageUtils.loadTexture( 'images/wood.jpg' );
 	woodTexture.wrapS = woodTexture.wrapT = THREE.RepeatWrapping; 
-	woodTexture.repeat.set( 1, 2 );
+	woodTexture.repeat.set( 1, 1 );
 	// Note the change to Lambert material.
 	var woodMaterial = new THREE.MeshLambertMaterial( { map: woodTexture, side: THREE.DoubleSide } );
 	var base_material = new THREE.MeshPhongMaterial( { color: 0xCC6600 } );
+	var red_material = new THREE.MeshPhongMaterial( { color: 0x993300 } );
+	var blue_material = new THREE.MeshPhongMaterial( { color: 0x1111ff } );
+
 	var base_geom = new THREE.CubeGeometry( 220, 10, 550 );
 	var base_mesh =  new THREE.Mesh( base_geom, woodMaterial );
 	base_mesh.castShadow = true;
+	base_mesh.receiveShadow = true;
 	base_mesh.position.set(350,5,-50);
+
+	//tubo superior izquierdo
+	var tubo1_geom = new THREE.CylinderGeometry( 3, 3, 400, 20, 4 );
+	var tubo1_mesh =  new THREE.Mesh( tubo1_geom, red_material );
+	tubo1_mesh.position.set(280,5,-250);
+
+
+	//circulo izquierdo
+	var circuloizquierdo_geom = new THREE.TorusGeometry( 130, 3, 16, 40 );
+	var circuloizquierdo_mesh = new THREE.Mesh( circuloizquierdo_geom, blue_material );
+	circuloizquierdo_mesh.castShadow = true;
+	circuloizquierdo_mesh.position.set(300,200,0);
+	circuloizquierdo_mesh.rotation.y += aRadianes(90);
+	grupo_ruedaruleta.add(circuloizquierdo_mesh);
+	//fin circulo izquierdo
+
+	//circulo derecho
+	var circuloderecho_mesh = circuloizquierdo_mesh.clone();
+	circuloderecho_mesh.position.x += 100;
+	circuloderecho_mesh.castShadow = true;
+	grupo_ruedaruleta.add(circuloderecho_mesh);
+	//fin circulo derecho
+
+	//ejes
+	var eje1_geom = new THREE.CylinderGeometry( 3, 3, 260, 20, 4 );
+	eje1_mesh = new THREE.Mesh( eje1_geom, blue_material );
+	eje1_mesh.castShadow = true;
+	eje1_mesh.position.set(300,200,0);
+	grupo_ejes.add(eje1_mesh);
+
+
+	//eje2
+	var eje2_mesh = eje1_mesh.clone();
+	eje2_mesh.rotation.x += aRadianes(90);
+	grupo_ejes.add(eje2_mesh);
+
+	//eje3
+	var eje3_mesh = eje1_mesh.clone();
+	eje3_mesh.rotation.x += aRadianes(45);
+	grupo_ejes.add(eje3_mesh);
+
+	//eje4
+	var eje4_mesh = eje1_mesh.clone();
+	eje4_mesh.rotation.x += aRadianes(135);
+	grupo_ejes.add(eje4_mesh);
+
+	grupo_ruedaruleta.add(grupo_ejes);
+	//Se duplica el grupo de ejes para la segunda parte de la 
+	//rueda
+	grupo_ejes2 = grupo_ejes.clone();
+	grupo_ejes2.position.x += 100;
+	grupo_ruedaruleta.add(grupo_ejes2);
+	//-------fin de ejes
+
+	//--soportes
+	//soporte 1
+	var soporte1_geom = new THREE.CylinderGeometry( 3, 3, 100, 20, 4 );
+	var soporte1_mesh = new THREE.Mesh( soporte1_geom, blue_material );
+	soporte1_mesh.rotation.z += aRadianes(90);
+	soporte1_mesh.position.set(350,200,130);
+	soporte1_mesh.castShadow = true;
+	grupo_soportes.add(soporte1_mesh);
+
+	//soporte 2
+	var soporte2_mesh = soporte1_mesh.clone();
+	soporte2_mesh.position.z -= 40.238816;
+	soporte2_mesh.position.y += 90.238816;
+	soporte2_mesh.castShadow = true;
+	grupo_soportes.add(soporte2_mesh);
+
+	//soporte 3 
+	var soporte3_mesh = soporte1_mesh.clone();
+	soporte3_mesh.position.z -= 130;
+	soporte3_mesh.position.y += 130;
+	soporte3_mesh.castShadow = true;
+	grupo_soportes.add(soporte3_mesh);
+
+	//soporte 4
+	var soporte4_mesh = soporte1_mesh.clone();
+	soporte4_mesh.position.z -= 260;
+	soporte4_mesh.castShadow = true;
+	grupo_soportes.add(soporte4_mesh);
+
+	//soporte 5
+	var soporte5_mesh = soporte2_mesh.clone();
+	soporte5_mesh.position.z -= 180;
+	soporte5_mesh.castShadow = true;
+	grupo_soportes.add(soporte5_mesh);
+
+	//soporte 6
+	var soporte6_mesh = soporte3_mesh.clone();
+	soporte6_mesh.position.y -= 260;
+	soporte6_mesh.castShadow = true;
+	grupo_soportes.add(soporte6_mesh);
+
+	//soporte 7
+	var soporte7_mesh = soporte2_mesh.clone();
+	soporte7_mesh.position.y -= 180;
+	soporte7_mesh.castShadow = true;
+	grupo_soportes.add(soporte7_mesh);
+
+	//soporte 8
+	var soporte8_mesh = soporte5_mesh.clone();
+	soporte8_mesh.position.y -= 180;
+	soporte8_mesh.castShadow = true;
+	grupo_soportes.add(soporte8_mesh);
+
+	//grupo_ruedaruleta.add(grupo_soportes);
+
+	//fin grupo soportes
+
+	//Esto es para ajustar el eje principal y que todo quede enmedio
+	grupo_ruedaruleta.position.y += 200;
+	grupo_ejes.position.y -= 200;
+	grupo_ejes2.position.y -= 200;
+	circuloizquierdo_mesh.position.y -= 200;
+	circuloderecho_mesh.position.y -= 200;
+	//grupo_soportes.position.y -= 200;
+
+
+
 	grupo_ruletacompleta.add(base_mesh);
-	//grupo_ruletacompleta.position.y += 100;
+	grupo_ruletacompleta.add(tubo1_mesh);
+	grupo_ruletacompleta.add(grupo_ruedaruleta);
+
 	
+
+	scene.add(grupo_soportes);
 	scene.add(grupo_ruletacompleta);
 
+	//------------------------------------
+	//---------Fin ruleta
+	//------------------------------------
 
 	//Lights section
 
@@ -186,7 +330,7 @@ var cube;
 	// spotlight #1 -- yellow, dark shadow
 	var spotlight = new THREE.SpotLight(0xffff00);
 	spotlight.position.set(-300,350,-30);
-	spotlight.shadowCameraVisible = true;
+	spotlight.shadowCameraVisible = false;
 	spotlight.shadowDarkness = 0.95;
 	spotlight.intensity = 2;
 	// must enable shadow casting ability for the light
@@ -204,7 +348,7 @@ var cube;
 	var spotlight2 = new THREE.SpotLight(0xff0000);
 	spotlight2.position.set(0,400,-100);
 	scene.add(spotlight2);
-	spotlight2.shadowCameraVisible = true;
+	spotlight2.shadowCameraVisible = false;
 	spotlight2.shadowDarkness = 0.70;
 	spotlight2.intensity = 10;
 	spotlight2.castShadow = true;
@@ -217,8 +361,8 @@ var cube;
 	
 	// spotlight #3----------------
 	var spotlight3 = new THREE.SpotLight(0x0000ff);
-	spotlight3.position.set(300,300,-100);
-	spotlight3.shadowCameraVisible = true;
+	spotlight3.position.set(300,500,-100);
+	spotlight3.shadowCameraVisible = false;
 	spotlight3.shadowDarkness = 0.95;
 	spotlight3.intensity = 4;
 	spotlight3.castShadow = true;
@@ -285,8 +429,10 @@ var cube;
 	//VERDE Y (ALTURA)
 	//ROJO X
 	var axes = new THREE.AxisHelper(500);
-	scene.add( axes );
+	//scene.add( axes );
 	var axes2 = new THREE.AxisHelper(500);
+	axes2.position = grupo_ruedaruleta.position;
+	scene.add(axes2);
 	
 //}
 
@@ -348,7 +494,8 @@ var render = function()
     camera.rotation.y = ang_rad;
     
     cube.rotation.z += 0.01;
-  
+  	
+  	//grupo_ruedaruleta.rotation.x += 0.01;
 
     requestAnimationFrame(render);
 	renderer.render( scene, camera );
@@ -357,6 +504,13 @@ var render = function()
               
 }
 render();
+
+function aGrados(radianes){
+	return radianes * 180 / Math.PI;
+            }
+function aRadianes(degrees) {
+	return degrees * Math.PI / 180;
+}
 
 </script>
 
