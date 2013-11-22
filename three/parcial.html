@@ -141,7 +141,7 @@ var cube;
 	
 	//LIGHT
 	var light = new THREE.PointLight(0xcccccc,.4);
-	light.position.set(0,250,0);
+	light.position.set(0,550,0);
 	scene.add(light);
 	//light.shadowCameraVisible = true;
 	
@@ -156,6 +156,28 @@ var cube;
 	// CUSTOM //
 	////////////
 
+	//Ferri Roulette
+
+	var grupo_ruletacompleta = new THREE.Object3D();
+
+	var woodTexture = new THREE.ImageUtils.loadTexture( 'images/wood.jpg' );
+	woodTexture.wrapS = woodTexture.wrapT = THREE.RepeatWrapping; 
+	woodTexture.repeat.set( 1, 2 );
+	// Note the change to Lambert material.
+	var woodMaterial = new THREE.MeshLambertMaterial( { map: woodTexture, side: THREE.DoubleSide } );
+	var base_material = new THREE.MeshPhongMaterial( { color: 0xCC6600 } );
+	var base_geom = new THREE.CubeGeometry( 220, 10, 550 );
+	var base_mesh =  new THREE.Mesh( base_geom, woodMaterial );
+	base_mesh.castShadow = true;
+	base_mesh.position.set(350,5,-50);
+	grupo_ruletacompleta.add(base_mesh);
+	//grupo_ruletacompleta.position.y += 100;
+	
+	scene.add(grupo_ruletacompleta);
+
+
+	//Lights section
+
 	// must enable shadows on the renderer 
 	renderer.shadowMapEnabled = true;
 	
@@ -163,26 +185,39 @@ var cube;
 	
 	// spotlight #1 -- yellow, dark shadow
 	var spotlight = new THREE.SpotLight(0xffff00);
-	spotlight.position.set(-60,150,-30);
+	spotlight.position.set(-300,350,-30);
 	spotlight.shadowCameraVisible = true;
 	spotlight.shadowDarkness = 0.95;
 	spotlight.intensity = 2;
 	// must enable shadow casting ability for the light
 	spotlight.castShadow = true;
 	scene.add(spotlight);
+	//cambiar la direccion en la que apunta
+	var lightTarget3 = new THREE.Object3D();
+	lightTarget3.position.set(-300,10,-30);
+	scene.add(lightTarget3);
+	spotlight.target = lightTarget3;
+	//---------------------------------------
+	//---------------------------------------
 
 	// spotlight #2 -- red, light shadow
 	var spotlight2 = new THREE.SpotLight(0xff0000);
-	spotlight2.position.set(60,150,-60);
+	spotlight2.position.set(0,400,-100);
 	scene.add(spotlight2);
 	spotlight2.shadowCameraVisible = true;
 	spotlight2.shadowDarkness = 0.70;
-	spotlight2.intensity = 2;
+	spotlight2.intensity = 10;
 	spotlight2.castShadow = true;
+	//change direction of this spotlight
+	var lightTarget2 = new THREE.Object3D();
+	lightTarget2.position.set(0,10,-100);
+	scene.add(lightTarget2);
+	spotlight2.target = lightTarget2;
+	//--------end of spotlight 2
 	
-	// spotlight #3
+	// spotlight #3----------------
 	var spotlight3 = new THREE.SpotLight(0x0000ff);
-	spotlight3.position.set(150,180,-100);
+	spotlight3.position.set(300,300,-100);
 	spotlight3.shadowCameraVisible = true;
 	spotlight3.shadowDarkness = 0.95;
 	spotlight3.intensity = 4;
@@ -190,10 +225,12 @@ var cube;
 	scene.add(spotlight3);
 	// change the direction this spotlight is facing
 	var lightTarget = new THREE.Object3D();
-	lightTarget.position.set(150,10,-100);
+	lightTarget.position.set(300,10,-100);
 	scene.add(lightTarget);
 	lightTarget.position.z += 2;
 	spotlight3.target = lightTarget;
+	//-end of spotlight 3
+
 
 	// cube: mesh to cast shadows
 	var cubeGeometry = new THREE.CubeGeometry( 50, 50, 50 );
@@ -249,36 +286,73 @@ var cube;
 	//ROJO X
 	var axes = new THREE.AxisHelper(500);
 	scene.add( axes );
-
+	var axes2 = new THREE.AxisHelper(500);
+	
 //}
 
 
-
+//Varibles de ayuda para control de las luces
 var arriba = true;
+var arriba2 = true;
+var arriba3 = true;
+
+//grupo_ruletacompleta.position.set(base_mesh);
 
 var render = function() 
 {	
 
-	console.log(lightTarget.position.z);
+	//console.log(lightTarget3.position.z);
+	//lightTarget2.position.z += 0.5;
+
+	if(lightTarget3.position.z > 140)
+		arriba3 = false;
+	if(lightTarget3.position.z < -280)
+		arriba3 = true;
+
+	if(lightTarget2.position.z > 140)
+		arriba2 = false;
+	if(lightTarget2.position.z < -280)
+		arriba2 = true;
 
 	if(lightTarget.position.z > 30)
 		arriba = false;
 	if(lightTarget.position.z < -180)
 		arriba = true;
-	if(arriba)
-		lightTarget.position.z += .9;
-	else
-		lightTarget.position.z -= .9;
-	//if(lightTarget.position.z > -30)
-	//	lightTarget.position.z -= .9;
+
+	if(arriba){
+		lightTarget.position.z += 2.5;
+
+	}
+	else{
+		lightTarget.position.z -= 2.5;
+	}
+
+	if(arriba2){
+		lightTarget2.position.z += 4;
+
+	}
+	else{
+		lightTarget2.position.z -= 4;
+	}
+
+	if(arriba3){
+		lightTarget3.position.z += 3;
+
+	}
+	else{
+		lightTarget3.position.z -= 3;
+	}
+	
 	camera.position.x = cam_xpos;
     camera.position.z = cam_zpos;
     camera.rotation.y = ang_rad;
-    //spotlight2.target.z += 0.1;
-    //spotlight3.target = lightTarget.position.set(150,10,-100);
+    
+    cube.rotation.z += 0.01;
+  
+
     requestAnimationFrame(render);
 	renderer.render( scene, camera );
-	console.log(2);
+	//console.log(2);
 	 
               
 }
