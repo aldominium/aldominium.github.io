@@ -140,7 +140,7 @@ var cube;
 
 	
 	//LIGHT
-	var light = new THREE.PointLight(0xcccccc,.4);
+	var light = new THREE.PointLight(0xcccccc,.6);
 	light.position.set(0,550,0);
 	scene.add(light);
 	//light.shadowCameraVisible = true;
@@ -168,6 +168,16 @@ var cube;
 	var grupo_soportes = new THREE.Object3D();
 	var grupo_soportes2 = new THREE.Object3D();
 	var grupo_soportes3 = new THREE.Object3D();
+	var grupo_cabina1 = new THREE.Object3D();
+	var grupo_cabina2 = new THREE.Object3D();
+	var grupo_cabina3 = new THREE.Object3D();
+	var grupo_cabina4 = new THREE.Object3D();
+	var grupo_cabina5 = new THREE.Object3D();
+	var grupo_cabina6 = new THREE.Object3D();
+	var grupo_cabina7 = new THREE.Object3D();
+	var grupo_cabina8 = new THREE.Object3D();
+
+	var eje_cabina1 = new THREE.Object3D(); 
 	
 
 
@@ -180,6 +190,7 @@ var cube;
 	var base_material = new THREE.MeshPhongMaterial( { color: 0xCC6600 } );
 	var red_material = new THREE.MeshPhongMaterial( { color: 0x993300 } );
 	var blue_material = new THREE.MeshPhongMaterial( { color: 0x1111ff } );
+	var blue_trans_material = new THREE.MeshPhongMaterial( { color: 0xffffff,opacity:0.4,transparent:true } );
 
 	var base_geom = new THREE.CubeGeometry( 220, 10, 550 );
 	var base_mesh =  new THREE.Mesh( base_geom, woodMaterial );
@@ -293,17 +304,123 @@ var cube;
 	soporte8_mesh.castShadow = true;
 	grupo_soportes.add(soporte8_mesh);
 
-	//grupo_ruedaruleta.add(grupo_soportes);
+	grupo_ruedaruleta.add(grupo_soportes);
 
 	//fin grupo soportes
 
+
+	//cabinas
+	var frente1_geom = new THREE.CubeGeometry(60,40,2);
+	var frente1_mesh = new THREE.Mesh( frente1_geom, blue_material );
+	frente1_mesh.castShadow = true;
+	var frente2_mesh = frente1_mesh.clone();
+	frente2_mesh.position.z -= 40;
+	frente1_mesh.position.y += 40;
+	frente2_mesh.position.y += 40;
+
+	var puertacabina_geom = new THREE.CubeGeometry(2,20,40);
+	var puertacabina_mesh = new THREE.Mesh( puertacabina_geom, blue_material );
+	puertacabina_mesh.castShadow = true;
+	//puertacabina_mesh.position = frente1_mesh.position;
+	puertacabina_mesh.position.z -= 20;
+	puertacabina_mesh.position.y += 30;
+	puertacabina_mesh.position.x -= 30;
+
+	var vidriocabina_geom = new THREE.CubeGeometry(2,30,40);
+	var vidriocabina_mesh = new THREE.Mesh( puertacabina_geom, blue_trans_material );
+	vidriocabina_mesh.castShadow = true;
+	vidriocabina_mesh.position.z -= 20;
+	vidriocabina_mesh.position.y += 50;
+	vidriocabina_mesh.position.x -= 30;
+	
+	var puertacabina2_mesh = puertacabina_mesh.clone();
+	puertacabina2_mesh.position.x += 60;
+
+	var vidriocabina2_mesh = vidriocabina_mesh.clone();
+	vidriocabina_mesh.position.x += 60;
+
+
+	var techocabina_geom = new THREE.CubeGeometry(60,2,40);
+	var techocabina_mesh = new THREE.Mesh(techocabina_geom, blue_material);
+	techocabina_mesh.castShadow = true;
+	techocabina_mesh.position.y += 59;
+	techocabina_mesh.position.z -= 20;
+
+	var suelocabina_mesh = techocabina_mesh.clone();
+	suelocabina_mesh.position.y -= 40;	
+
+	grupo_cabina1.add(frente1_mesh);
+	grupo_cabina1.add(frente2_mesh);
+	grupo_cabina1.add(puertacabina_mesh);
+	grupo_cabina1.add(puertacabina2_mesh);
+	grupo_cabina1.add(techocabina_mesh);
+	grupo_cabina1.add(suelocabina_mesh);
+	grupo_cabina1.add(vidriocabina_mesh);
+	grupo_cabina1.add(vidriocabina2_mesh);
+
+	grupo_cabina1.position.y -= 60;
+	grupo_cabina1.position.z += 20;
+
+
+	eje_cabina1.add(grupo_cabina1);
+
+	eje_cabina1.position.set(350,200,130);
+	//aqui finaliza toda la cabina 1
+
+	var eje_cabina2 = eje_cabina1.clone();
+	eje_cabina2.position.z -= 260;
+
+	var eje_cabina3 = eje_cabina1.clone();
+	eje_cabina3.position.z -= 130;
+	eje_cabina3.position.y += 130;
+
+	var eje_cabina4 = eje_cabina3.clone();
+	eje_cabina4.position.y -= 260;
+	
+	var eje_cabina5 = eje_cabina1.clone();
+	eje_cabina5.position.z -= 40.238816;
+	eje_cabina5.position.y += 90.238816;
+
+	var eje_cabina6 = eje_cabina5.clone();
+	eje_cabina6.position.z -= 180;
+
+	var eje_cabina7 = eje_cabina5.clone();
+	eje_cabina7.position.y -= 180;
+
+	var eje_cabina8 = eje_cabina6.clone();
+	eje_cabina8.position.y -= 180;
+
+
+
+
+	grupo_ruedaruleta.add(eje_cabina1);
+	grupo_ruedaruleta.add(eje_cabina2);
+	grupo_ruedaruleta.add(eje_cabina3);
+	grupo_ruedaruleta.add(eje_cabina4);
+	grupo_ruedaruleta.add(eje_cabina5);
+	grupo_ruedaruleta.add(eje_cabina6);
+	grupo_ruedaruleta.add(eje_cabina7);
+	grupo_ruedaruleta.add(eje_cabina8);
+
+	//fin de cabinas
+
+
 	//Esto es para ajustar el eje principal y que todo quede enmedio
+	//el grupo rueda ruleta da el eje principal
 	grupo_ruedaruleta.position.y += 200;
 	grupo_ejes.position.y -= 200;
 	grupo_ejes2.position.y -= 200;
 	circuloizquierdo_mesh.position.y -= 200;
 	circuloderecho_mesh.position.y -= 200;
-	//grupo_soportes.position.y -= 200;
+	grupo_soportes.position.y -= 200;
+	eje_cabina1.position.y -= 200;
+	eje_cabina2.position.y -= 200;
+	eje_cabina3.position.y -= 200;
+	eje_cabina4.position.y -= 200;
+	eje_cabina5.position.y -= 200;
+	eje_cabina6.position.y -= 200;
+	eje_cabina7.position.y -= 200;
+	eje_cabina8.position.y -= 200;
 
 
 
@@ -312,8 +429,8 @@ var cube;
 	grupo_ruletacompleta.add(grupo_ruedaruleta);
 
 	
+	
 
-	scene.add(grupo_soportes);
 	scene.add(grupo_ruletacompleta);
 
 	//------------------------------------
@@ -383,7 +500,7 @@ var cube;
 	cube.position.set(0,50,0);
 	// Note that the mesh is flagged to cast shadows
 	cube.castShadow = true;
-	scene.add(cube);
+	//scene.add(cube);
 	
 	// floor: mesh to receive shadows
 	var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
@@ -424,6 +541,7 @@ var cube;
 	shape.position = spotlight3.position;
 	scene.add( shape );
 
+
 	//AXIS HELPER ---AYUDARME CON LAS COORDENADAS
 	//AZUL Z (PROFUNDIDAD)
 	//VERDE Y (ALTURA)
@@ -433,6 +551,10 @@ var cube;
 	var axes2 = new THREE.AxisHelper(500);
 	axes2.position = grupo_ruedaruleta.position;
 	scene.add(axes2);
+
+	var axes3 = new THREE.AxisHelper(300);
+	axes3.position = eje_cabina1.position;
+	scene.add(axes3);
 	
 //}
 
@@ -493,9 +615,17 @@ var render = function()
     camera.position.z = cam_zpos;
     camera.rotation.y = ang_rad;
     
-    cube.rotation.z += 0.01;
+    
   	
-  	//grupo_ruedaruleta.rotation.x += 0.01;
+  	grupo_ruedaruleta.rotation.x += 0.01;
+  	eje_cabina1.rotation.x -= 0.01;
+  	eje_cabina2.rotation.x -= 0.01;
+  	eje_cabina3.rotation.x -= 0.01;
+  	eje_cabina4.rotation.x -= 0.01;
+  	eje_cabina5.rotation.x -= 0.01;
+  	eje_cabina6.rotation.x -= 0.01;
+  	eje_cabina7.rotation.x -= 0.01;
+  	eje_cabina8.rotation.x -= 0.01;
 
     requestAnimationFrame(render);
 	renderer.render( scene, camera );
