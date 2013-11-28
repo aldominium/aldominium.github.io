@@ -143,6 +143,10 @@ var cube;
 	var light = new THREE.PointLight(0xcccccc,.6);
 	light.position.set(0,550,0);
 	scene.add(light);
+
+	var light2 = new THREE.PointLight(0xcccccc,.8);
+	light2.position.set(0,50,100);
+	scene.add(light2);
 	//light.shadowCameraVisible = true;
 	
 	// SKYBOX/FOG
@@ -191,6 +195,9 @@ var cube;
 	var red_material = new THREE.MeshPhongMaterial( { color: 0x993300 } );
 	var blue_material = new THREE.MeshPhongMaterial( { color: 0x1111ff } );
 	var blue_trans_material = new THREE.MeshPhongMaterial( { color: 0xffffff,opacity:0.4,transparent:true } );
+	var green_material = new THREE.MeshPhongMaterial( { color: 0x00dd00 } );
+	var red_material2 = new THREE.MeshPhongMaterial( { color: 0xee0000 } );
+	var purple_material = new THREE.MeshPhongMaterial( { color: 0x9900ff} );
 
 	var base_geom = new THREE.CubeGeometry( 220, 10, 550 );
 	var base_mesh =  new THREE.Mesh( base_geom, woodMaterial );
@@ -199,10 +206,43 @@ var cube;
 	base_mesh.position.set(350,5,-50);
 
 	//tubo superior izquierdo
-	var tubo1_geom = new THREE.CylinderGeometry( 3, 3, 400, 20, 4 );
+	var tubo1_geom = new THREE.CylinderGeometry( 3, 3, 310, 20, 4 );
 	var tubo1_mesh =  new THREE.Mesh( tubo1_geom, red_material );
-	tubo1_mesh.position.set(280,5,-250);
+	tubo1_mesh.position.set(280,105,-140);
+	tubo1_mesh.rotation.x += aRadianes(52);
+	tubo1_mesh.rotation.z -= aRadianes(6);
 
+	//tubo superior derecho
+	var tubo2_mesh = tubo1_mesh.clone();
+	tubo2_mesh.position.x += 140;
+	tubo2_mesh.rotation.z += aRadianes(12);
+
+	//tubo inferior izquierdo
+	var tubo3_mesh = tubo1_mesh.clone();
+	tubo3_mesh.position.z += 250;
+	tubo3_mesh.rotation.x -= aRadianes(104);
+	
+	//tubo inferior derecho
+	var tubo4_mesh = tubo2_mesh.clone();
+	tubo4_mesh.position.z += 250;
+	tubo4_mesh.rotation.x -= aRadianes(104);
+
+	//tapas
+	var tapaizquierda_geom = new THREE.CylinderGeometry( 60, 60, 3, 20, 4 );
+	var tapaizquierda_mesh = new THREE.Mesh( tapaizquierda_geom, purple_material );
+	tapaizquierda_mesh.rotation.z += aRadianes(90);
+	tapaizquierda_mesh.position.set(295,200,0);
+
+	var tapaderecha_mesh = tapaizquierda_mesh.clone();
+	tapaderecha_mesh.position.x += 110;
+
+	//eje central
+	var ejecentral_geom = new THREE.CylinderGeometry( 5, 5, 100, 20, 4 );
+	var ejecentral_mesh = new THREE.Mesh( ejecentral_geom, purple_material );
+	ejecentral_mesh.rotation.z += aRadianes(90);
+	ejecentral_mesh.position.set(350,200,0);
+
+	
 
 	//circulo izquierdo
 	var circuloizquierdo_geom = new THREE.TorusGeometry( 130, 3, 16, 40 );
@@ -311,7 +351,7 @@ var cube;
 
 	//cabinas
 	var frente1_geom = new THREE.CubeGeometry(60,40,2);
-	var frente1_mesh = new THREE.Mesh( frente1_geom, blue_material );
+	var frente1_mesh = new THREE.Mesh( frente1_geom, red_material2 );
 	frente1_mesh.castShadow = true;
 	var frente2_mesh = frente1_mesh.clone();
 	frente2_mesh.position.z -= 40;
@@ -319,7 +359,7 @@ var cube;
 	frente2_mesh.position.y += 40;
 
 	var puertacabina_geom = new THREE.CubeGeometry(2,20,40);
-	var puertacabina_mesh = new THREE.Mesh( puertacabina_geom, blue_material );
+	var puertacabina_mesh = new THREE.Mesh( puertacabina_geom, red_material2 );
 	puertacabina_mesh.castShadow = true;
 	//puertacabina_mesh.position = frente1_mesh.position;
 	puertacabina_mesh.position.z -= 20;
@@ -341,7 +381,7 @@ var cube;
 
 
 	var techocabina_geom = new THREE.CubeGeometry(60,2,40);
-	var techocabina_mesh = new THREE.Mesh(techocabina_geom, blue_material);
+	var techocabina_mesh = new THREE.Mesh(techocabina_geom, red_material2);
 	techocabina_mesh.castShadow = true;
 	techocabina_mesh.position.y += 59;
 	techocabina_mesh.position.z -= 20;
@@ -401,6 +441,7 @@ var cube;
 	grupo_ruedaruleta.add(eje_cabina6);
 	grupo_ruedaruleta.add(eje_cabina7);
 	grupo_ruedaruleta.add(eje_cabina8);
+	grupo_ruedaruleta.add(ejecentral_mesh);
 
 	//fin de cabinas
 
@@ -421,11 +462,17 @@ var cube;
 	eje_cabina6.position.y -= 200;
 	eje_cabina7.position.y -= 200;
 	eje_cabina8.position.y -= 200;
+	ejecentral_mesh.position.y -= 200;
 
 
 
 	grupo_ruletacompleta.add(base_mesh);
 	grupo_ruletacompleta.add(tubo1_mesh);
+	grupo_ruletacompleta.add(tubo2_mesh);
+	grupo_ruletacompleta.add(tubo3_mesh);
+	grupo_ruletacompleta.add(tubo4_mesh);
+	grupo_ruletacompleta.add(tapaizquierda_mesh);
+	grupo_ruletacompleta.add(tapaderecha_mesh);
 	grupo_ruletacompleta.add(grupo_ruedaruleta);
 
 	
@@ -437,6 +484,236 @@ var cube;
 	//---------Fin ruleta
 	//------------------------------------
 
+	//--------------------------------
+	//---------Tazas locas
+	//--------------------------------
+
+	
+
+	var highblue_material = new THREE.MeshPhongMaterial( { color: 0xFF00EA,side: THREE.DoubleSide } );
+
+	var green_material = new THREE.MeshPhongMaterial( { color: 0x4AFF00,side: THREE.DoubleSide } );
+
+	var ruedaTexture = new THREE.ImageUtils.loadTexture( 'images/rueda.png' );
+	ruedaTexture.wrapS = ruedaTexture.wrapT = THREE.RepeatWrapping; 
+	ruedaTexture.repeat.set( 1, 1 );
+	// Note the change to Lambert material.
+	var ruedaMaterial = new THREE.MeshBasicMaterial( { map: ruedaTexture, side: THREE.DoubleSide } );
+
+	var grupo_tazacompleta = new THREE.Object3D();
+	var grupo_tazalocas = new THREE.Object3D();
+
+	var esfera_geom = new THREE.SphereGeometry( 40, 32, 16, 0, 2 * Math.PI, 0, Math.PI / 2 );
+	var esfera_mesh =  new THREE.Mesh(esfera_geom,highblue_material);
+	
+	esfera_mesh.rotation.z += aRadianes(180);
+	esfera_mesh.position.y += 100;
+	esfera_mesh.castShadow = true;
+	grupo_tazacompleta.add(esfera_mesh);
+
+	
+
+	var aza_geom = new THREE.TorusGeometry( 10, 3, 8, 14,Math.PI * 1.2 );
+	var aza_mesh = new THREE.Mesh(aza_geom, green_material);
+	aza_mesh.castShadow = true;
+	aza_mesh.rotation.z += aRadianes(90);
+	aza_mesh.position.y += 85;
+	aza_mesh.position.x -= 35;
+	grupo_tazacompleta.add(aza_mesh);
+
+	//para ajustar el eje de rotacion principal
+	grupo_tazacompleta.position.y += 100;
+	esfera_mesh.position.y -= 60;
+	aza_mesh.position.y -= 60;
+	//--
+
+	//para situar la taza en su lugar debido de la base
+	grupo_tazacompleta.position.y -= 100;
+	grupo_tazacompleta.position.z += 180;
+	//-----
+
+	grupo_tazalocas.add(grupo_tazacompleta);
+	//--termina construccion primera taza, las demas serán clones
+
+	//para poner la segunda taza completa
+	var grupo_tazacompleta2 = grupo_tazacompleta.clone();
+	grupo_tazacompleta2.position.z -= 360;
+	scene.add(grupo_tazacompleta2);
+	grupo_tazalocas.add(grupo_tazacompleta2);
+	//----
+
+	//para poner la tercera taza completa
+	var grupo_tazacompleta3 = grupo_tazacompleta.clone();
+	grupo_tazacompleta3.position.z -= 180;
+	grupo_tazacompleta3.position.x -= 180;
+	//scene.add(grupo_tazacompleta3);
+	grupo_tazalocas.add(grupo_tazacompleta3);
+	//----
+
+	//para poner la cuarta taza completa
+	var grupo_tazacompleta4 = grupo_tazacompleta.clone();
+	grupo_tazacompleta4.position.z -= 180;
+	grupo_tazacompleta4.position.x += 180;
+	//scene.add(grupo_tazacompleta4);
+	grupo_tazalocas.add(grupo_tazacompleta4);
+	//----
+
+	//Esta es la base
+
+	var basetazas_geom = new THREE.CylinderGeometry( 200, 200, 10, 100, 100 );
+	var basetazas_mesh = new THREE.Mesh(basetazas_geom,ruedaMaterial);
+	basetazas_mesh.castShadow = true;
+	basetazas_mesh.receiveShadow = true;
+	grupo_tazalocas.add(basetazas_mesh);
+	//---
+
+
+
+	grupo_tazalocas.position.x -= 250;
+	grupo_tazalocas.position.z += 180;
+	scene.add(grupo_tazalocas);
+
+	//---AQUI TERMINAR TAZAS LOCAS
+	//----------------------------
+
+
+	//EMPIEZAN SILLAS VOLADORAS
+
+	var grupo_sillasvoladoras = new THREE.Object3D();
+	var grupo_sillasvoladorassup = new THREE.Object3D();
+	var grupo_silla= new THREE.Object3D();
+
+
+	var posteprincipal_geom = new THREE.CylinderGeometry( 30, 30, 300, 6, 100 );
+	var posteprincipal_mesh = new THREE.Mesh(posteprincipal_geom,highblue_material);
+	posteprincipal_mesh.position.y += 150;
+	posteprincipal_mesh.castShadow = true;
+	grupo_sillasvoladorassup.add(posteprincipal_mesh);
+
+	var postebase_geom = new THREE.CylinderGeometry( 60, 60, 130, 6, 100 );
+	var postebase_mesh = new THREE.Mesh(postebase_geom,highblue_material);
+	postebase_mesh.position.y += 70;
+	posteprincipal_mesh.castShadow = true;
+	grupo_sillasvoladoras.add(postebase_mesh);
+
+	var ruedaPrincipal_geom = new THREE.CylinderGeometry( 200, 200, 30, 6, 100 );
+
+	var ruedaPrincipal_mesh = new THREE.Mesh(ruedaPrincipal_geom,green_material);
+	ruedaPrincipal_mesh.position.y += 270;
+	//ruedaPrincipal_mesh.castShadow = true;
+
+	grupo_sillasvoladorassup.add(ruedaPrincipal_mesh);
+
+	//cuerdas
+	var cuerda1_geom = new THREE.CylinderGeometry( 1, 1, 120, 6, 100 );
+
+	var cuerda1_mesh = new THREE.Mesh(cuerda1_geom,green_material);
+	cuerda1_mesh.castShadow = true;
+
+	cuerda1_mesh.position.z += 130;
+	cuerda1_mesh.position.x += 70;
+	cuerda1_mesh.position.y += 210;
+
+	grupo_sillasvoladorassup.add(cuerda1_mesh);
+	//aqui termina la cuerda1, las demas son clones
+
+	var cuerda2_mesh = cuerda1_mesh.clone();
+	cuerda2_mesh.position.x -= 150;
+	grupo_sillasvoladorassup.add(cuerda2_mesh);
+
+	var cuerda3_mesh = cuerda1_mesh.clone();
+	cuerda3_mesh.position.z -= 230;
+	grupo_sillasvoladorassup.add(cuerda3_mesh);
+
+	var cuerda4_mesh = cuerda2_mesh.clone();
+	cuerda4_mesh.position.z -= 230;
+	grupo_sillasvoladorassup.add(cuerda4_mesh);
+
+	var cuerda5_mesh = cuerda1_mesh.clone();
+	cuerda5_mesh.position.z -= 115;
+	cuerda5_mesh.position.x += 80;
+	grupo_sillasvoladorassup.add(cuerda5_mesh);
+
+	var cuerda6_mesh = cuerda2_mesh.clone();
+	cuerda6_mesh.position.z -= 115;
+	cuerda6_mesh.position.x -= 80;
+	grupo_sillasvoladorassup.add(cuerda6_mesh);
+
+	//fin de cuerdas
+
+	grupo_sillasvoladoras.add(grupo_sillasvoladorassup);
+	
+
+	//Aqui las sillas
+	var asientosilla_geom = new THREE.CubeGeometry(30,3,20);
+	var asientosilla_mesh = new THREE.Mesh(asientosilla_geom, green_material);
+	asientosilla_mesh.castShadow = true;
+	grupo_silla.add(asientosilla_mesh);
+
+	var respaldosilla_geom = new THREE.CubeGeometry(30,50,3);
+	var respaldosilla_mesh = new THREE.Mesh(respaldosilla_geom, green_material);
+	respaldosilla_mesh.position.z -= 10;
+	respaldosilla_mesh.castShadow = true;
+	grupo_silla.add(respaldosilla_mesh);
+
+	var piessilla_geom = new THREE.CubeGeometry(30,25,3);
+	var piessilla_mesh = new THREE.Mesh(piessilla_geom, green_material);
+	piessilla_mesh.position.z += 10;
+	piessilla_mesh.position.y -= 11;
+	grupo_silla.add(piessilla_mesh);
+	grupo_silla.rotation.y += aRadianes(135);
+	piessilla_mesh.castShadow = true;
+	
+	//Para ubicar la silla en la cuerda
+	grupo_silla.position = cuerda1_mesh.position;
+	piessilla_mesh.position.y -= 60;
+	respaldosilla_mesh.position.y -= 60;
+	asientosilla_mesh.position.y -= 60;
+	//-----
+
+	//aqui termina la silla 1, lo demás es clonar
+
+	//silla 2
+	var grupo_silla2 = grupo_silla.clone();
+	grupo_silla2.position = cuerda2_mesh.position;
+	grupo_silla2.rotation.y += aRadianes(90);
+
+	//silla 3
+	var grupo_silla3 = grupo_silla.clone();
+	grupo_silla3.position = cuerda6_mesh.position;
+	grupo_silla3.rotation.y += aRadianes(135);
+
+	//silla 4
+	var grupo_silla4 = grupo_silla.clone();
+	grupo_silla4.position = cuerda5_mesh.position;
+	grupo_silla4.rotation.y += aRadianes(315);
+
+	//silla 5
+	var grupo_silla5 = grupo_silla.clone();
+	grupo_silla5.position = cuerda3_mesh.position;
+	grupo_silla5.rotation.y += aRadianes(270);
+
+	//silla 6
+	var grupo_silla6 = grupo_silla.clone();
+	grupo_silla6.position = cuerda4_mesh.position;
+	grupo_silla6.rotation.y += aRadianes(225);
+
+	grupo_sillasvoladorassup.add(grupo_silla);
+	grupo_sillasvoladorassup.add(grupo_silla2);
+	grupo_sillasvoladorassup.add(grupo_silla3);
+	grupo_sillasvoladorassup.add(grupo_silla4);
+	grupo_sillasvoladorassup.add(grupo_silla5);
+	grupo_sillasvoladorassup.add(grupo_silla6);
+
+	grupo_sillasvoladoras.position.x -= 300;
+	grupo_sillasvoladoras.position.z -= 200;
+
+	scene.add(grupo_sillasvoladoras);
+
+	//Aqui terminan las sillas voladoras
+
+
+
 	//Lights section
 
 	// must enable shadows on the renderer 
@@ -446,7 +723,7 @@ var cube;
 	
 	// spotlight #1 -- yellow, dark shadow
 	var spotlight = new THREE.SpotLight(0xffff00);
-	spotlight.position.set(-300,350,-30);
+	spotlight.position.set(-300,450,-30);
 	spotlight.shadowCameraVisible = false;
 	spotlight.shadowDarkness = 0.95;
 	spotlight.intensity = 2;
@@ -463,7 +740,7 @@ var cube;
 
 	// spotlight #2 -- red, light shadow
 	var spotlight2 = new THREE.SpotLight(0xff0000);
-	spotlight2.position.set(0,400,-100);
+	spotlight2.position.set(0,450,-100);
 	scene.add(spotlight2);
 	spotlight2.shadowCameraVisible = false;
 	spotlight2.shadowDarkness = 0.70;
@@ -548,13 +825,13 @@ var cube;
 	//ROJO X
 	var axes = new THREE.AxisHelper(500);
 	//scene.add( axes );
-	var axes2 = new THREE.AxisHelper(500);
-	axes2.position = grupo_ruedaruleta.position;
+	var axes2 = new THREE.AxisHelper(100);
+	axes2.position = grupo_silla.position;
 	scene.add(axes2);
 
-	var axes3 = new THREE.AxisHelper(300);
+	/*var axes3 = new THREE.AxisHelper(300);
 	axes3.position = eje_cabina1.position;
-	scene.add(axes3);
+	scene.add(axes3);*/
 	
 //}
 
@@ -626,6 +903,16 @@ var render = function()
   	eje_cabina6.rotation.x -= 0.01;
   	eje_cabina7.rotation.x -= 0.01;
   	eje_cabina8.rotation.x -= 0.01;
+
+  	//rotacion en las tazas locas
+  	grupo_tazacompleta.rotation.y -= 0.08;
+  	grupo_tazacompleta2.rotation.y += 0.08;
+  	grupo_tazacompleta3.rotation.y -= 0.08;
+  	grupo_tazacompleta4.rotation.y += 0.08;
+  	grupo_tazalocas.rotation.y += 0.05;
+
+  	//rotacion sillas voladoras
+  	grupo_sillasvoladorassup.rotation.y += 0.05;
 
     requestAnimationFrame(render);
 	renderer.render( scene, camera );
