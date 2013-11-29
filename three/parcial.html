@@ -140,11 +140,11 @@ var cube;
 
 	
 	//LIGHT
-	var light = new THREE.PointLight(0xcccccc,.6);
+	var light = new THREE.PointLight(0xcccccc,.4);
 	light.position.set(0,550,0);
 	scene.add(light);
 
-	var light2 = new THREE.PointLight(0xcccccc,.8);
+	var light2 = new THREE.PointLight(0xcccccc,.6);
 	light2.position.set(0,50,100);
 	scene.add(light2);
 	//light.shadowCameraVisible = true;
@@ -712,6 +712,112 @@ var cube;
 
 	//Aqui terminan las sillas voladoras
 
+	//---------------
+	//Aqui empieza un auuuuuutooooo
+
+
+	//------parte trasera
+	//-------------------
+	var traseroizquierdo_geom = new THREE.CubeGeometry(3,20,100);
+	var traseroizquierdo_mesh = new THREE.Mesh(traseroizquierdo_geom, green_material);
+	traseroizquierdo_mesh.position.y += 20;
+
+	var traseroderecho_mesh = traseroizquierdo_mesh.clone();
+	traseroderecho_mesh.position.x += 50;
+
+	var traserosuperior_geom = new THREE.CubeGeometry(50,3,80);
+	var traserosuperior_mesh = new THREE.Mesh(traserosuperior_geom, green_material);
+	traserosuperior_mesh.position.y += 29;
+	traserosuperior_mesh.position.z += 10;
+	traserosuperior_mesh.position.x += 25;
+
+	scene.add(traserosuperior_mesh);
+	scene.add(traseroizquierdo_mesh);
+	scene.add(traseroderecho_mesh);
+	//----fin parte trasera
+
+	//--------CABINA
+	//----parte superior cabina(sin movimiento)
+	var vidriotrasero_geom = new THREE.CubeGeometry(50,20,3);
+	var vidriotrasero_mesh = new THREE.Mesh(vidriotrasero_geom, blue_trans_material);
+	vidriotrasero_mesh.position.y += 40;
+	vidriotrasero_mesh.position.x += 25;
+	vidriotrasero_mesh.position.z -= 30;
+	
+
+	var capote_geom = new THREE.CubeGeometry(50,3,50);
+	var capote_mesh = new THREE.Mesh(capote_geom, green_material);
+
+	capote_mesh.position.y += 50;
+	capote_mesh.position.x += 25;
+	capote_mesh.position.z -= 55;
+
+	var vidriodelantero_mesh = vidriotrasero_mesh.clone();
+	vidriodelantero_mesh.position.z -= 48;
+	//--fin parte superior
+
+	//vidrios laterales
+	var vidriolateralizquierdo_geom = new THREE.CubeGeometry(3,20,20);
+	var vidriolateralizquierdo_mesh = new THREE.Mesh(vidriolateralizquierdo_geom, blue_trans_material);
+
+	vidriolateralizquierdo_mesh.position.y += 40;
+	vidriolateralizquierdo_mesh.position.z -= 40;
+
+	var vidriolateralderecho_mesh = vidriolateralizquierdo_mesh.clone();
+	vidriolateralderecho_mesh.position.x += 50;
+
+
+	scene.add(capote_mesh);
+	scene.add(vidriotrasero_mesh);
+	scene.add(vidriodelantero_mesh);
+	scene.add(vidriolateralizquierdo_mesh);
+	scene.add(vidriolateralderecho_mesh);
+	//---fin parte superrior cabina sin movimiento
+	//----puertas
+	var grupo_puerta1 = new THREE.Object3D();
+	grupo_puerta1.position.z -= 80;
+	//var grupo_puerta2 = grupo_puerta1.clone();
+	//grupo_puerta2.position.x += 50;
+
+	var ventanaizquierda_geom = new THREE.CubeGeometry(3,20,30);
+	var ventanaizquierda_mesh = new THREE.Mesh(ventanaizquierda_geom, blue_trans_material);
+	ventanaizquierda_mesh.position.z += 15;
+	ventanaizquierda_mesh.position.y += 40;
+	grupo_puerta1.add(ventanaizquierda_mesh);
+
+	var puerta1_geom = new THREE.CubeGeometry(3,20,30);
+	var puerta1_mesh = new THREE.Mesh(puerta1_geom, green_material);
+	puerta1_mesh.position.y += 20;
+	puerta1_mesh.position.z += 15;
+	grupo_puerta1.add(puerta1_mesh);
+
+	var grupo_puerta2 = grupo_puerta1.clone();
+	grupo_puerta2.position.x += 50;
+
+
+	scene.add(grupo_puerta1);
+	scene.add(grupo_puerta2);
+
+	//fin puertas
+
+	//---parte delantera
+	var ejecofre = new THREE.Object3D();
+	ejecofre.position.z -= 78
+	ejecofre.position.y += 30;
+
+	var cofre_geom = new THREE.CubeGeometry(50,3,50);
+	var cofre_mesh = new THREE.Mesh(cofre_geom, green_material);
+	cofre_mesh.position.y += 0;
+	cofre_mesh.position.z -= 27;
+	cofre_mesh.position.x += 25;
+	ejecofre.add(cofre_mesh);
+
+	scene.add(ejecofre);
+	//scene.add(cofre_mesh);
+
+
+	//---------------------
+
 
 
 	//Lights section
@@ -826,7 +932,7 @@ var cube;
 	var axes = new THREE.AxisHelper(500);
 	//scene.add( axes );
 	var axes2 = new THREE.AxisHelper(100);
-	axes2.position = grupo_silla.position;
+	axes2.position = ejecofre.position;
 	scene.add(axes2);
 
 	/*var axes3 = new THREE.AxisHelper(300);
@@ -913,6 +1019,10 @@ var render = function()
 
   	//rotacion sillas voladoras
   	grupo_sillasvoladorassup.rotation.y += 0.05;
+
+  	//rotacion puertas
+  	//ejecofre.rotation.x += 0.01;
+  	
 
     requestAnimationFrame(render);
 	renderer.render( scene, camera );
