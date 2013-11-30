@@ -55,7 +55,23 @@ var cube;
             var cam_xpos = 0.0;
             var Pi = 3.1415926535;
             var ang_rad = 0;
-            var up_down_ang = 0;           
+            var up_down_ang = 0;
+
+            var car_zpos = 40.0;
+            var car_xpos = 0.0;
+            var Pi = 3.1415926535;
+            var car_ang_rad = 0;
+            var car_up_down_ang = 0;
+
+            var rotacion_puerta1 = 0;
+            var maximo_puerta1 = 15;
+            var minimo_puerta1 = 0;
+
+            
+
+            var rotacion_cofre = 0;
+            var maximo_cofre = 15;
+            var minimo_cofre = 0;            
 
             function doKeyDown(evt){
                 console.log("Tecla picada: "+evt.keyCode);
@@ -106,10 +122,66 @@ var cube;
                         cam_zpos -= dz;
                         cam_xpos -= dx;                   
                     break;
-                    case 82:  /* R was pressed */
+                    case 84:  /* T was pressed */
+                   	    var cdx = 3 * Math.sin(car_ang_rad); 
+                        var cdz = 3 * Math.cos(car_ang_rad); 
+                        car_zpos -= cdz;
+                        car_xpos -= cdx;
                     break;
                     case 70:  /* F was pressed */
+                    	car_ang_rad += (5* Pi / 180);  
                     break;
+                    case 72:  /* H was pressed */
+                    	car_ang_rad -= (5* Pi / 180);
+                    break;
+                    case 71:  /* G was pressed */
+                   	    var cdx = 3 * Math.sin(car_ang_rad); 
+                        var cdz = 3 * Math.cos(car_ang_rad); 
+                        car_zpos += cdz;
+                        car_xpos += cdx;
+                    break;
+                    case 85:  /* U was pressed */
+                    	if(rotacion_puerta1 < maximo_puerta1){
+                    		grupo_puerta1.rotation.y -= 0.05;
+                    		grupo_puerta2.rotation.y += 0.05;
+                    		rotacion_puerta1 += 1;
+                    		console.log(rotacion_cofre);
+                   		 }
+
+
+                    break;
+                    case 74:  /* J was pressed */
+                    	if(rotacion_puerta1 > minimo_puerta1){
+                    		grupo_puerta1.rotation.y += 0.05;
+                    		grupo_puerta2.rotation.y -= 0.05;
+                    		rotacion_puerta1 -= 1;
+                    		console.log(rotacion_cofre);
+                   		 }
+                    break;
+                    case 73:  /* I was pressed */
+                    	if(rotacion_cofre < maximo_cofre){
+                    		ejecofre.rotation.x += 0.05;
+                    		rotacion_cofre += 1;
+                    		console.log(rotacion_cofre);
+                   		 }
+                    break;
+                    case 75:  /* K was pressed */
+                    	if( rotacion_cofre > minimo_cofre){
+                    		ejecofre.rotation.x -= 0.05;
+                    		rotacion_cofre -= 1;
+                   		 }
+                    break;
+                    case 48:  /* 0 was pressed */
+                    	video.pause();
+						video.currentTime = 0;
+                    break;
+                    case 49:  /* 1 was pressed */
+                    	video.play();
+                    break;
+                    case 50:  /* 2 was pressed */
+                    	video.pause();
+                    break;
+
                 }
             }
 
@@ -149,12 +221,67 @@ var cube;
 	scene.add(light2);
 	//light.shadowCameraVisible = true;
 	
-	// SKYBOX/FOG
-	var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
-	var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
-	var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
-	// scene.add(skyBox);
-	scene.fog = new THREE.FogExp2( 0x9999ff, 0.00025 );
+	// Para crear el escenario de las montañas
+	var imagePrefix = "images/dawnmountain-";
+	var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+	var imageSuffix = ".png";
+	var skyGeometry = new THREE.CubeGeometry( 5000, 5000, 5000 );	
+	
+	var materialArray = [];
+	for (var i = 0; i < 6; i++)
+		materialArray.push( new THREE.MeshBasicMaterial({
+			map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+			side: THREE.BackSide
+		}));
+	var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+	var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+	scene.add( skyBox );
+	//-----------
+
+	//Para la sala cine
+	///////////
+	// VIDEO //
+	///////////
+	
+	// create the video element
+	video = document.createElement( 'video' );
+	// video.id = 'video';
+	// video.type = ' video/ogg; codecs="theora, vorbis" ';
+	video.src = "videos/star.ogv";
+	video.load(); // must call after setting/changing source
+	video.play();
+	
+	// alternative method -- 
+	// create DIV in HTML:
+	// <video id="myVideo" autoplay style="display:none">
+	//		<source src="videos/sintel.ogv" type='video/ogg; codecs="theora, vorbis"'>
+	// </video>
+	// and set JS variable:
+	// video = document.getElementById( 'myVideo' );
+	
+	videoImage = document.createElement( 'canvas' );
+	videoImage.width = 420;
+	videoImage.height = 185;
+
+	videoImageContext = videoImage.getContext( '2d' );
+	// background color if no video present
+	videoImageContext.fillStyle = '#000000';
+	videoImageContext.fillRect( 0, 0, videoImage.width, videoImage.height );
+
+	videoTexture = new THREE.Texture( videoImage );
+	videoTexture.minFilter = THREE.LinearFilter;
+	videoTexture.magFilter = THREE.LinearFilter;
+	
+	var movieMaterial = new THREE.MeshBasicMaterial( { map: videoTexture, overdraw: true, side:THREE.DoubleSide } );
+	// the geometry on which the movie will be displayed;
+	// 		movie image will be scaled to fit these dimensions.
+	var movieGeometry = new THREE.PlaneGeometry( 440, 300, 4, 4 );
+	//movieGeometry.position.z -= 100;
+	var movieScreen = new THREE.Mesh( movieGeometry, movieMaterial );
+	movieScreen.position.set(0,50,0);
+	movieScreen.position.z -= 400;
+	scene.add(movieScreen);
+	//-----------------
 	
 	////////////
 	// CUSTOM //
@@ -191,6 +318,12 @@ var cube;
 	woodTexture.repeat.set( 1, 1 );
 	// Note the change to Lambert material.
 	var woodMaterial = new THREE.MeshLambertMaterial( { map: woodTexture, side: THREE.DoubleSide } );
+
+	var redTexture = new THREE.ImageUtils.loadTexture( 'images/redtexture.jpg' );
+	redTexture.wrapS = redTexture.wrapT = THREE.RepeatWrapping; 
+	redTexture.repeat.set( 1, 1 );
+	// Note the change to Lambert material.
+	var redTextureMaterial = new THREE.MeshLambertMaterial( { map: redTexture, side: THREE.DoubleSide } );
 	var base_material = new THREE.MeshPhongMaterial( { color: 0xCC6600 } );
 	var red_material = new THREE.MeshPhongMaterial( { color: 0x993300 } );
 	var blue_material = new THREE.MeshPhongMaterial( { color: 0x1111ff } );
@@ -198,6 +331,7 @@ var cube;
 	var green_material = new THREE.MeshPhongMaterial( { color: 0x00dd00 } );
 	var red_material2 = new THREE.MeshPhongMaterial( { color: 0xee0000 } );
 	var purple_material = new THREE.MeshPhongMaterial( { color: 0x9900ff} );
+	var black_material = new THREE.MeshPhongMaterial( { color: 0x000000} );
 
 	var base_geom = new THREE.CubeGeometry( 220, 10, 550 );
 	var base_mesh =  new THREE.Mesh( base_geom, woodMaterial );
@@ -211,21 +345,25 @@ var cube;
 	tubo1_mesh.position.set(280,105,-140);
 	tubo1_mesh.rotation.x += aRadianes(52);
 	tubo1_mesh.rotation.z -= aRadianes(6);
+	tubo1_mesh.castShadow = true;
 
 	//tubo superior derecho
 	var tubo2_mesh = tubo1_mesh.clone();
 	tubo2_mesh.position.x += 140;
 	tubo2_mesh.rotation.z += aRadianes(12);
+	tubo2_mesh.castShadow = true;
 
 	//tubo inferior izquierdo
 	var tubo3_mesh = tubo1_mesh.clone();
 	tubo3_mesh.position.z += 250;
 	tubo3_mesh.rotation.x -= aRadianes(104);
+	tubo3_mesh.castShadow = true;
 	
 	//tubo inferior derecho
 	var tubo4_mesh = tubo2_mesh.clone();
 	tubo4_mesh.position.z += 250;
 	tubo4_mesh.rotation.x -= aRadianes(104);
+	tubo4_mesh.castShadow = true;
 
 	//tapas
 	var tapaizquierda_geom = new THREE.CylinderGeometry( 60, 60, 3, 20, 4 );
@@ -714,26 +852,34 @@ var cube;
 
 	//---------------
 	//Aqui empieza un auuuuuutooooo
+	var grupo_autocompleto = new THREE.Object3D();
+	var grupo_partetrasera = new THREE.Object3D();
+	var grupo_cabinacoche = new THREE.Object3D();
+	var grupo_partedelantera = new THREE.Object3D();
+	var grupo_llantas = new THREE.Object3D();
+	//grupo_autocompleto.position.x -= 30;
 
 
 	//------parte trasera
 	//-------------------
 	var traseroizquierdo_geom = new THREE.CubeGeometry(3,20,100);
-	var traseroizquierdo_mesh = new THREE.Mesh(traseroizquierdo_geom, green_material);
+	var traseroizquierdo_mesh = new THREE.Mesh(traseroizquierdo_geom, redTextureMaterial);
 	traseroizquierdo_mesh.position.y += 20;
 
 	var traseroderecho_mesh = traseroizquierdo_mesh.clone();
 	traseroderecho_mesh.position.x += 50;
 
 	var traserosuperior_geom = new THREE.CubeGeometry(50,3,80);
-	var traserosuperior_mesh = new THREE.Mesh(traserosuperior_geom, green_material);
+	var traserosuperior_mesh = new THREE.Mesh(traserosuperior_geom, redTextureMaterial);
 	traserosuperior_mesh.position.y += 29;
 	traserosuperior_mesh.position.z += 10;
 	traserosuperior_mesh.position.x += 25;
 
-	scene.add(traserosuperior_mesh);
-	scene.add(traseroizquierdo_mesh);
-	scene.add(traseroderecho_mesh);
+	grupo_partetrasera.add(traserosuperior_mesh);
+	grupo_partetrasera.add(traseroizquierdo_mesh);
+	grupo_partetrasera.add(traseroderecho_mesh);
+
+	grupo_autocompleto.add(grupo_partetrasera);
 	//----fin parte trasera
 
 	//--------CABINA
@@ -746,7 +892,7 @@ var cube;
 	
 
 	var capote_geom = new THREE.CubeGeometry(50,3,50);
-	var capote_mesh = new THREE.Mesh(capote_geom, green_material);
+	var capote_mesh = new THREE.Mesh(capote_geom, redTextureMaterial);
 
 	capote_mesh.position.y += 50;
 	capote_mesh.position.x += 25;
@@ -767,11 +913,13 @@ var cube;
 	vidriolateralderecho_mesh.position.x += 50;
 
 
-	scene.add(capote_mesh);
-	scene.add(vidriotrasero_mesh);
-	scene.add(vidriodelantero_mesh);
-	scene.add(vidriolateralizquierdo_mesh);
-	scene.add(vidriolateralderecho_mesh);
+	grupo_cabinacoche.add(capote_mesh);
+	grupo_cabinacoche.add(vidriotrasero_mesh);
+	grupo_cabinacoche.add(vidriodelantero_mesh);
+	grupo_cabinacoche.add(vidriolateralizquierdo_mesh);
+	grupo_cabinacoche.add(vidriolateralderecho_mesh);
+
+	grupo_autocompleto.add(grupo_cabinacoche);
 	//---fin parte superrior cabina sin movimiento
 	//----puertas
 	var grupo_puerta1 = new THREE.Object3D();
@@ -786,7 +934,7 @@ var cube;
 	grupo_puerta1.add(ventanaizquierda_mesh);
 
 	var puerta1_geom = new THREE.CubeGeometry(3,20,30);
-	var puerta1_mesh = new THREE.Mesh(puerta1_geom, green_material);
+	var puerta1_mesh = new THREE.Mesh(puerta1_geom, redTextureMaterial);
 	puerta1_mesh.position.y += 20;
 	puerta1_mesh.position.z += 15;
 	grupo_puerta1.add(puerta1_mesh);
@@ -795,26 +943,153 @@ var cube;
 	grupo_puerta2.position.x += 50;
 
 
-	scene.add(grupo_puerta1);
-	scene.add(grupo_puerta2);
+	grupo_autocompleto.add(grupo_puerta1);
+	grupo_autocompleto.add(grupo_puerta2);
 
 	//fin puertas
 
 	//---parte delantera
+	//cofre movible
 	var ejecofre = new THREE.Object3D();
 	ejecofre.position.z -= 78
 	ejecofre.position.y += 30;
 
 	var cofre_geom = new THREE.CubeGeometry(50,3,50);
-	var cofre_mesh = new THREE.Mesh(cofre_geom, green_material);
+	var cofre_mesh = new THREE.Mesh(cofre_geom, redTextureMaterial);
 	cofre_mesh.position.y += 0;
 	cofre_mesh.position.z -= 27;
 	cofre_mesh.position.x += 25;
 	ejecofre.add(cofre_mesh);
+	
 
-	scene.add(ejecofre);
-	//scene.add(cofre_mesh);
+	// luces delanteras 
+	var faro1 = new THREE.SpotLight(0xFFFF00);
+	faro1.position.set(-10,20,-95);
+	faro1.shadowCameraVisible = true;
+	faro1.shadowDarkness = 0.95;
+	faro1.intensity = 20;
+	//faro1.angle = Math.PI/2;
+	faro1.castShadow = true;
+	//scene.add(spotlight3);
+	// change the direction this spotlight is facing
+	var faro1_blanco = new THREE.Object3D();
+	faro1_blanco.position.set(-10,0,-135);
+	scene.add(faro1_blanco);
+	faro1_blanco.position.z += 2;
+	faro1.target = faro1_blanco;
+	
 
+	var faro2 = new THREE.SpotLight(0xFFFF00);
+	faro2.position.set(20,20,-95);
+	faro2.shadowCameraVisible = true;
+	faro2.shadowDarkness = 0.95;
+	faro2.intensity = 20;
+	//faro1.angle = Math.PI/2;
+	faro2.castShadow = true;
+	//scene.add(spotlight3);
+	// change the direction this spotlight is facing
+	var faro2_blanco = new THREE.Object3D();
+	faro2_blanco.position.set(20,0,-135);
+	scene.add(faro2_blanco);
+	faro2_blanco.position.z += 2;
+	faro2.target = faro2_blanco;
+
+
+
+	grupo_autocompleto.add(faro1);
+	grupo_autocompleto.add(faro1_blanco);
+	grupo_autocompleto.add(faro2);
+	grupo_autocompleto.add(faro2_blanco);
+	grupo_autocompleto.add(ejecofre);
+	//fin cofre
+	
+	//partes laterales y deltantera del cofre
+	var delanteraizquierda_geom = new THREE.CubeGeometry(3,20,50);
+	var delanteraizquierda_mesh = new THREE.Mesh(delanteraizquierda_geom, redTextureMaterial);
+
+	delanteraizquierda_mesh.position.z -= 105;
+	delanteraizquierda_mesh.position.y += 20;
+
+	var delanteraderecha_mesh = delanteraizquierda_mesh.clone();
+	delanteraderecha_mesh.position.x += 50;
+
+
+	var delanteradelantera_geom = new THREE.CubeGeometry(50,20,2);
+	var delanteradelantera_mesh = new THREE.Mesh(delanteradelantera_geom, redTextureMaterial);
+
+	delanteradelantera_mesh.position.y += 20;
+	delanteradelantera_mesh.position.z -= 129;
+	delanteradelantera_mesh.position.x += 25;
+
+	var  delanteratrasera_mesh = delanteradelantera_mesh.clone();
+	delanteratrasera_mesh.position.z += 180; 
+
+	grupo_partedelantera.add(delanteraizquierda_mesh);
+	grupo_partedelantera.add(delanteraderecha_mesh);
+	grupo_partedelantera.add(delanteradelantera_mesh);
+	grupo_partedelantera.add(delanteratrasera_mesh);
+
+	grupo_autocompleto.add(grupo_partedelantera);
+	//fin partes delanteras
+
+	//----------------llantas y suelo
+
+
+	var suelocoche_geom = new THREE.CubeGeometry(50,2,180);
+	var suelocoche_mesh = new THREE.Mesh(suelocoche_geom, green_material);
+
+	suelocoche_mesh.position.y += 10;
+	suelocoche_mesh.position.x += 25;
+	suelocoche_mesh.position.z -= 38;
+
+
+	var llanta1_geom = new THREE.CylinderGeometry( 12, 12, 7, 100, 100 );
+
+	var llanta1_mesh = new THREE.Mesh(llanta1_geom,black_material);
+	llanta1_mesh.rotation.z += aRadianes(90);
+	llanta1_mesh.position.x -= 4;
+	llanta1_mesh.position.y += 12;
+	llanta1_mesh.position.z += 10;
+	llanta1_mesh.castShadow = true;
+
+	var llanta2_mesh = llanta1_mesh.clone();
+	llanta2_mesh.position.x += 58;
+
+	var llanta3_mesh = llanta1_mesh.clone();
+	llanta3_mesh.position.z -= 100;
+
+	var llanta4_mesh = llanta3_mesh.clone();
+	llanta4_mesh.position.x += 58;
+
+	grupo_llantas.add(llanta1_mesh);
+	grupo_llantas.add(llanta2_mesh);
+	grupo_llantas.add(llanta3_mesh);
+	grupo_llantas.add(llanta4_mesh);
+	grupo_llantas.add(suelocoche_mesh);
+
+
+	grupo_autocompleto.add(grupo_llantas);
+
+	//--fin llantas y suelo
+
+	grupo_partetrasera.position.x -= 25;
+	grupo_partedelantera.position.x -= 25;
+	grupo_cabinacoche.position.x -= 25;
+	ejecofre.position.x -= 25;
+	grupo_puerta1.position.x -= 25;
+	grupo_puerta2.position.x -= 25;
+	grupo_llantas.position.x -= 25;
+
+	grupo_partetrasera.position.z += 35;
+	grupo_partedelantera.position.z += 35;
+	grupo_cabinacoche.position.z += 35;
+	ejecofre.position.z += 35;
+	grupo_puerta1.position.z += 35;
+	grupo_puerta2.position.z += 35;
+	grupo_llantas.position.z += 35;
+
+
+	scene.add(grupo_autocompleto);
 
 	//---------------------
 
@@ -932,7 +1207,7 @@ var cube;
 	var axes = new THREE.AxisHelper(500);
 	//scene.add( axes );
 	var axes2 = new THREE.AxisHelper(100);
-	axes2.position = ejecofre.position;
+	axes2.position = grupo_autocompleto.position;
 	scene.add(axes2);
 
 	/*var axes3 = new THREE.AxisHelper(300);
@@ -951,6 +1226,16 @@ var arriba3 = true;
 
 var render = function() 
 {	
+
+	
+	
+
+	if ( video.readyState === video.HAVE_ENOUGH_DATA ) 
+	{
+		videoImageContext.drawImage( video, 0, 0 );
+		if ( videoTexture ) 
+			videoTexture.needsUpdate = true;
+	}
 
 	//console.log(lightTarget3.position.z);
 	//lightTarget2.position.z += 0.5;
@@ -997,6 +1282,10 @@ var render = function()
 	camera.position.x = cam_xpos;
     camera.position.z = cam_zpos;
     camera.rotation.y = ang_rad;
+
+    grupo_autocompleto.position.x = car_xpos;
+    grupo_autocompleto.position.z = car_zpos;
+    grupo_autocompleto.rotation.y = car_ang_rad;
     
     
   	
@@ -1022,6 +1311,7 @@ var render = function()
 
   	//rotacion puertas
   	//ejecofre.rotation.x += 0.01;
+  	//grupo_autocompleto.rotation.y += 0.01;
   	
 
     requestAnimationFrame(render);
