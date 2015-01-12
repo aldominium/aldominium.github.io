@@ -24,6 +24,7 @@
 	TFGH - To move the car<br>
 	UJ- Open/Close car’s doors<br>
 	WASD - To move the camera<br>
+	0/1 - Pause/Play Video<br>
 <a href="http://aldominium.github.io/three/parcial.html">http://aldominium.github.io/three/parcial.html</a>
 </div>
 <!-- ------------------------------------------------------------ -->
@@ -79,14 +80,14 @@ var cube;
                 console.log("Tecla picada: "+evt.keyCode);
                 switch (evt.keyCode) {
                     case 38:  /* Up arrow was pressed */
-                        var dx = 3 * Math.sin(ang_rad);
-                        var dz = 3 * Math.cos(ang_rad);
+                        var dx = 70 * Math.sin(ang_rad);
+                        var dz = 70 * Math.cos(ang_rad);
                         cam_zpos -= dz;
                         cam_xpos -= dx;
                         break;
                     case 40:  /* Down arrow was pressed */
-                        var dx = 3 * Math.sin(ang_rad);
-                        var dz = 3 * Math.cos(ang_rad);
+                        var dx = 70 * Math.sin(ang_rad);
+                        var dz = 70 * Math.cos(ang_rad);
                         cam_zpos += dz;
                         cam_xpos += dx;
                         break;
