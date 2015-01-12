@@ -21,7 +21,9 @@
 <script src="js/info.js"></script>
 <div id="infoButton"></div>
 <div id="infoBox" title="Demo Information">
-Examen final de Graficas Computacionales de Aldo Olivares Dominguez, ver online en
+	TFGH - To move the car
+	UJ- Open/Close car’s doors
+	WASD - To move the camera
 <a href="http://aldominium.github.io/three/parcial.html">http://aldominium.github.io/three/parcial.html</a>
 </div>
 <!-- ------------------------------------------------------------ -->
@@ -49,8 +51,8 @@ var cube;
 
 
             // agregamos el "listener" para "escuchar" los eventos del teclado
-            
-             window.addEventListener('keydown',doKeyDown,true); 
+
+             window.addEventListener('keydown',doKeyDown,true);
             var cam_zpos = 700.0;
             var cam_xpos = 0.0;
             var Pi = 3.1415926535;
@@ -67,76 +69,76 @@ var cube;
             var maximo_puerta1 = 15;
             var minimo_puerta1 = 0;
 
-            
+
 
             var rotacion_cofre = 0;
             var maximo_cofre = 15;
-            var minimo_cofre = 0;            
+            var minimo_cofre = 0;
 
             function doKeyDown(evt){
                 console.log("Tecla picada: "+evt.keyCode);
                 switch (evt.keyCode) {
-                    case 38:  /* Up arrow was pressed */                        
-                        var dx = 3 * Math.sin(ang_rad); 
-                        var dz = 3 * Math.cos(ang_rad); 
+                    case 38:  /* Up arrow was pressed */
+                        var dx = 3 * Math.sin(ang_rad);
+                        var dz = 3 * Math.cos(ang_rad);
                         cam_zpos -= dz;
                         cam_xpos -= dx;
                         break;
                     case 40:  /* Down arrow was pressed */
-                        var dx = 3 * Math.sin(ang_rad); 
-                        var dz = 3 * Math.cos(ang_rad); 
+                        var dx = 3 * Math.sin(ang_rad);
+                        var dz = 3 * Math.cos(ang_rad);
                         cam_zpos += dz;
                         cam_xpos += dx;
                         break;
                     case 37:  /* Left arrow was pressed */
-                        ang_rad += (5* Pi / 180);                        
+                        ang_rad += (5* Pi / 180);
                         break;
                     case 39:  /* Right arrow was pressed */
                         ang_rad -= (5* Pi / 180);
                     break;
                     case 87:  /* W was pressed */
                     	camera.position.y += 3;
-                        /*var dx = 0.5 * Math.sin(ang_rad+(Pi/2)); 
-                        var dz = 0.5 * Math.cos(ang_rad+(Pi/2)); 
+                        /*var dx = 0.5 * Math.sin(ang_rad+(Pi/2));
+                        var dz = 0.5 * Math.cos(ang_rad+(Pi/2));
                         cam_zpos -= dz;
-                        cam_xpos -= dx; */                  
+                        cam_xpos -= dx; */
                     break;
                     case 83:  /* S was pressed */
                         camera.position.y -= 3;
-                        /*var dx = 0.5 * Math.sin(ang_rad-(Pi/2)); 
-                        var dz = 0.5 * Math.cos(ang_rad-(Pi/2)); 
+                        /*var dx = 0.5 * Math.sin(ang_rad-(Pi/2));
+                        var dz = 0.5 * Math.cos(ang_rad-(Pi/2));
                         cam_zpos -= dz;
-                        cam_xpos -= dx;*/                         
+                        cam_xpos -= dx;*/
                     break;
-                    case 65:  /* A was pressed */                        
+                    case 65:  /* A was pressed */
                        //camera.position.y -= 0.5;
-                       var dx = 3 * Math.sin(ang_rad+(Pi/2)); 
-                        var dz = 3 * Math.cos(ang_rad+(Pi/2)); 
+                       var dx = 3 * Math.sin(ang_rad+(Pi/2));
+                        var dz = 3 * Math.cos(ang_rad+(Pi/2));
                         cam_zpos -= dz;
-                        cam_xpos -= dx; 
+                        cam_xpos -= dx;
                     break;
                     case 68:  /* D was pressed */
                         //camera.position.y += 0.5;
-                        var dx = 3 * Math.sin(ang_rad-(Pi/2)); 
-                        var dz = 3 * Math.cos(ang_rad-(Pi/2)); 
+                        var dx = 3 * Math.sin(ang_rad-(Pi/2));
+                        var dz = 3 * Math.cos(ang_rad-(Pi/2));
                         cam_zpos -= dz;
-                        cam_xpos -= dx;                   
+                        cam_xpos -= dx;
                     break;
                     case 84:  /* T was pressed */
-                   	    var cdx = 3 * Math.sin(car_ang_rad); 
-                        var cdz = 3 * Math.cos(car_ang_rad); 
+                   	    var cdx = 3 * Math.sin(car_ang_rad);
+                        var cdz = 3 * Math.cos(car_ang_rad);
                         car_zpos -= cdz;
                         car_xpos -= cdx;
                     break;
                     case 70:  /* F was pressed */
-                    	car_ang_rad += (5* Pi / 180);  
+                    	car_ang_rad += (5* Pi / 180);
                     break;
                     case 72:  /* H was pressed */
                     	car_ang_rad -= (5* Pi / 180);
                     break;
                     case 71:  /* G was pressed */
-                   	    var cdx = 3 * Math.sin(car_ang_rad); 
-                        var cdz = 3 * Math.cos(car_ang_rad); 
+                   	    var cdx = 3 * Math.sin(car_ang_rad);
+                        var cdz = 3 * Math.cos(car_ang_rad);
                         car_zpos += cdz;
                         car_xpos += cdx;
                     break;
@@ -186,12 +188,12 @@ var cube;
             }
 
 
-// FUNCTIONS 		
-/*function init() 
+// FUNCTIONS
+/*function init()
 {*/
 	//CONTROLES
 
-	
+
 
 	// SCENE
 	scene = new THREE.Scene();
@@ -201,16 +203,16 @@ var cube;
 	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 	scene.add(camera);
 	camera.position.set(0,150,400);
-	
 
-	
+
+
 	renderer = new THREE.WebGLRenderer( {antialias:true} );
-	
+
 	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	container = document.getElementById( 'ThreeJS' );
 	container.appendChild( renderer.domElement );
 
-	
+
 	//LIGHT
 	var light = new THREE.PointLight(0xcccccc,.4);
 	light.position.set(0,550,0);
@@ -220,13 +222,13 @@ var cube;
 	light2.position.set(0,50,100);
 	scene.add(light2);
 	//light.shadowCameraVisible = true;
-	
+
 	// Para crear el escenario de las montañas
 	var imagePrefix = "images/dawnmountain-";
 	var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
 	var imageSuffix = ".png";
-	var skyGeometry = new THREE.CubeGeometry( 5000, 5000, 5000 );	
-	
+	var skyGeometry = new THREE.CubeGeometry( 5000, 5000, 5000 );
+
 	var materialArray = [];
 	for (var i = 0; i < 6; i++)
 		materialArray.push( new THREE.MeshBasicMaterial({
@@ -242,7 +244,7 @@ var cube;
 	///////////
 	// VIDEO //
 	///////////
-	
+
 	// create the video element
 	video = document.createElement( 'video' );
 	// video.id = 'video';
@@ -250,15 +252,15 @@ var cube;
 	video.src = "videos/star.ogv";
 	video.load(); // must call after setting/changing source
 	video.play();
-	
-	// alternative method -- 
+
+	// alternative method --
 	// create DIV in HTML:
 	// <video id="myVideo" autoplay style="display:none">
 	//		<source src="videos/sintel.ogv" type='video/ogg; codecs="theora, vorbis"'>
 	// </video>
 	// and set JS variable:
 	// video = document.getElementById( 'myVideo' );
-	
+
 	videoImage = document.createElement( 'canvas' );
 	videoImage.width = 420;
 	videoImage.height = 185;
@@ -271,7 +273,7 @@ var cube;
 	videoTexture = new THREE.Texture( videoImage );
 	videoTexture.minFilter = THREE.LinearFilter;
 	videoTexture.magFilter = THREE.LinearFilter;
-	
+
 	var movieMaterial = new THREE.MeshBasicMaterial( { map: videoTexture, overdraw: true, side:THREE.DoubleSide } );
 	// the geometry on which the movie will be displayed;
 	// 		movie image will be scaled to fit these dimensions.
@@ -282,7 +284,7 @@ var cube;
 	movieScreen.position.z -= 400;
 	scene.add(movieScreen);
 	//-----------------
-	
+
 	////////////
 	// CUSTOM //
 	////////////
@@ -308,19 +310,19 @@ var cube;
 	var grupo_cabina7 = new THREE.Object3D();
 	var grupo_cabina8 = new THREE.Object3D();
 
-	var eje_cabina1 = new THREE.Object3D(); 
-	
+	var eje_cabina1 = new THREE.Object3D();
+
 
 
 
 	var woodTexture = new THREE.ImageUtils.loadTexture( 'images/wood.jpg' );
-	woodTexture.wrapS = woodTexture.wrapT = THREE.RepeatWrapping; 
+	woodTexture.wrapS = woodTexture.wrapT = THREE.RepeatWrapping;
 	woodTexture.repeat.set( 1, 1 );
 	// Note the change to Lambert material.
 	var woodMaterial = new THREE.MeshLambertMaterial( { map: woodTexture, side: THREE.DoubleSide } );
 
 	var redTexture = new THREE.ImageUtils.loadTexture( 'images/redtexture.jpg' );
-	redTexture.wrapS = redTexture.wrapT = THREE.RepeatWrapping; 
+	redTexture.wrapS = redTexture.wrapT = THREE.RepeatWrapping;
 	redTexture.repeat.set( 1, 1 );
 	// Note the change to Lambert material.
 	var redTextureMaterial = new THREE.MeshLambertMaterial( { map: redTexture, side: THREE.DoubleSide } );
@@ -358,7 +360,7 @@ var cube;
 	tubo3_mesh.position.z += 250;
 	tubo3_mesh.rotation.x -= aRadianes(104);
 	tubo3_mesh.castShadow = true;
-	
+
 	//tubo inferior derecho
 	var tubo4_mesh = tubo2_mesh.clone();
 	tubo4_mesh.position.z += 250;
@@ -380,7 +382,7 @@ var cube;
 	ejecentral_mesh.rotation.z += aRadianes(90);
 	ejecentral_mesh.position.set(350,200,0);
 
-	
+
 
 	//circulo izquierdo
 	var circuloizquierdo_geom = new THREE.TorusGeometry( 130, 3, 16, 40 );
@@ -422,7 +424,7 @@ var cube;
 	grupo_ejes.add(eje4_mesh);
 
 	grupo_ruedaruleta.add(grupo_ejes);
-	//Se duplica el grupo de ejes para la segunda parte de la 
+	//Se duplica el grupo de ejes para la segunda parte de la
 	//rueda
 	grupo_ejes2 = grupo_ejes.clone();
 	grupo_ejes2.position.x += 100;
@@ -445,7 +447,7 @@ var cube;
 	soporte2_mesh.castShadow = true;
 	grupo_soportes.add(soporte2_mesh);
 
-	//soporte 3 
+	//soporte 3
 	var soporte3_mesh = soporte1_mesh.clone();
 	soporte3_mesh.position.z -= 130;
 	soporte3_mesh.position.y += 130;
@@ -510,7 +512,7 @@ var cube;
 	vidriocabina_mesh.position.z -= 20;
 	vidriocabina_mesh.position.y += 50;
 	vidriocabina_mesh.position.x -= 30;
-	
+
 	var puertacabina2_mesh = puertacabina_mesh.clone();
 	puertacabina2_mesh.position.x += 60;
 
@@ -525,7 +527,7 @@ var cube;
 	techocabina_mesh.position.z -= 20;
 
 	var suelocabina_mesh = techocabina_mesh.clone();
-	suelocabina_mesh.position.y -= 40;	
+	suelocabina_mesh.position.y -= 40;
 
 	grupo_cabina1.add(frente1_mesh);
 	grupo_cabina1.add(frente2_mesh);
@@ -554,7 +556,7 @@ var cube;
 
 	var eje_cabina4 = eje_cabina3.clone();
 	eje_cabina4.position.y -= 260;
-	
+
 	var eje_cabina5 = eje_cabina1.clone();
 	eje_cabina5.position.z -= 40.238816;
 	eje_cabina5.position.y += 90.238816;
@@ -613,8 +615,8 @@ var cube;
 	grupo_ruletacompleta.add(tapaderecha_mesh);
 	grupo_ruletacompleta.add(grupo_ruedaruleta);
 
-	
-	
+
+
 
 	scene.add(grupo_ruletacompleta);
 
@@ -626,14 +628,14 @@ var cube;
 	//---------Tazas locas
 	//--------------------------------
 
-	
+
 
 	var highblue_material = new THREE.MeshPhongMaterial( { color: 0xFF00EA,side: THREE.DoubleSide } );
 
 	var green_material = new THREE.MeshPhongMaterial( { color: 0x4AFF00,side: THREE.DoubleSide } );
 
 	var ruedaTexture = new THREE.ImageUtils.loadTexture( 'images/rueda.png' );
-	ruedaTexture.wrapS = ruedaTexture.wrapT = THREE.RepeatWrapping; 
+	ruedaTexture.wrapS = ruedaTexture.wrapT = THREE.RepeatWrapping;
 	ruedaTexture.repeat.set( 1, 1 );
 	// Note the change to Lambert material.
 	var ruedaMaterial = new THREE.MeshBasicMaterial( { map: ruedaTexture, side: THREE.DoubleSide } );
@@ -643,13 +645,13 @@ var cube;
 
 	var esfera_geom = new THREE.SphereGeometry( 40, 32, 16, 0, 2 * Math.PI, 0, Math.PI / 2 );
 	var esfera_mesh =  new THREE.Mesh(esfera_geom,highblue_material);
-	
+
 	esfera_mesh.rotation.z += aRadianes(180);
 	esfera_mesh.position.y += 100;
 	esfera_mesh.castShadow = true;
 	grupo_tazacompleta.add(esfera_mesh);
 
-	
+
 
 	var aza_geom = new THREE.TorusGeometry( 10, 3, 8, 14,Math.PI * 1.2 );
 	var aza_mesh = new THREE.Mesh(aza_geom, green_material);
@@ -780,7 +782,7 @@ var cube;
 	//fin de cuerdas
 
 	grupo_sillasvoladoras.add(grupo_sillasvoladorassup);
-	
+
 
 	//Aqui las sillas
 	var asientosilla_geom = new THREE.CubeGeometry(30,3,20);
@@ -801,7 +803,7 @@ var cube;
 	grupo_silla.add(piessilla_mesh);
 	grupo_silla.rotation.y += aRadianes(135);
 	piessilla_mesh.castShadow = true;
-	
+
 	//Para ubicar la silla en la cuerda
 	grupo_silla.position = cuerda1_mesh.position;
 	piessilla_mesh.position.y -= 60;
@@ -889,7 +891,7 @@ var cube;
 	vidriotrasero_mesh.position.y += 40;
 	vidriotrasero_mesh.position.x += 25;
 	vidriotrasero_mesh.position.z -= 30;
-	
+
 
 	var capote_geom = new THREE.CubeGeometry(50,3,50);
 	var capote_mesh = new THREE.Mesh(capote_geom, redTextureMaterial);
@@ -960,9 +962,9 @@ var cube;
 	cofre_mesh.position.z -= 27;
 	cofre_mesh.position.x += 25;
 	ejecofre.add(cofre_mesh);
-	
 
-	// luces delanteras 
+
+	// luces delanteras
 	var faro1 = new THREE.SpotLight(0xFFFF00);
 	faro1.position.set(-10,20,-95);
 	faro1.shadowCameraVisible = true;
@@ -977,7 +979,7 @@ var cube;
 	scene.add(faro1_blanco);
 	faro1_blanco.position.z += 2;
 	faro1.target = faro1_blanco;
-	
+
 
 	var faro2 = new THREE.SpotLight(0xFFFF00);
 	faro2.position.set(20,20,-95);
@@ -1002,7 +1004,7 @@ var cube;
 	grupo_autocompleto.add(faro2_blanco);
 	grupo_autocompleto.add(ejecofre);
 	//fin cofre
-	
+
 	//partes laterales y deltantera del cofre
 	var delanteraizquierda_geom = new THREE.CubeGeometry(3,20,50);
 	var delanteraizquierda_mesh = new THREE.Mesh(delanteraizquierda_geom, redTextureMaterial);
@@ -1022,7 +1024,7 @@ var cube;
 	delanteradelantera_mesh.position.x += 25;
 
 	var  delanteratrasera_mesh = delanteradelantera_mesh.clone();
-	delanteratrasera_mesh.position.z += 180; 
+	delanteratrasera_mesh.position.z += 180;
 
 	grupo_partedelantera.add(delanteraizquierda_mesh);
 	grupo_partedelantera.add(delanteraderecha_mesh);
@@ -1097,11 +1099,11 @@ var cube;
 
 	//Lights section
 
-	// must enable shadows on the renderer 
+	// must enable shadows on the renderer
 	renderer.shadowMapEnabled = true;
-	
+
 	// "shadow cameras" show the light source and direction
-	
+
 	// spotlight #1 -- yellow, dark shadow
 	var spotlight = new THREE.SpotLight(0xffff00);
 	spotlight.position.set(-300,450,-30);
@@ -1133,7 +1135,7 @@ var cube;
 	scene.add(lightTarget2);
 	spotlight2.target = lightTarget2;
 	//--------end of spotlight 2
-	
+
 	// spotlight #3----------------
 	var spotlight3 = new THREE.SpotLight(0x0000ff);
 	spotlight3.position.set(300,500,-100);
@@ -1159,10 +1161,10 @@ var cube;
 	// Note that the mesh is flagged to cast shadows
 	cube.castShadow = true;
 	//scene.add(cube);
-	
+
 	// floor: mesh to receive shadows
 	var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
-	floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
+	floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
 	floorTexture.repeat.set( 10, 10 );
 	// Note the change to Lambert material.
 	var floorMaterial = new THREE.MeshLambertMaterial( { map: floorTexture, side: THREE.DoubleSide } );
@@ -1173,28 +1175,28 @@ var cube;
 	// Note the mesh is flagged to receive shadows
 	floor.receiveShadow = true;
 	scene.add(floor);
-	
+
 	// create "light-ball" meshes
 	var sphereGeometry = new THREE.SphereGeometry( 10, 16, 8 );
 	var darkMaterial = new THREE.MeshBasicMaterial( { color: 0x000000 } );
-		
-	var wireframeMaterial = new THREE.MeshBasicMaterial( 
-		{ color: 0xffff00, wireframe: true, transparent: true } ); 
-	var shape = THREE.SceneUtils.createMultiMaterialObject( 
+
+	var wireframeMaterial = new THREE.MeshBasicMaterial(
+		{ color: 0xffff00, wireframe: true, transparent: true } );
+	var shape = THREE.SceneUtils.createMultiMaterialObject(
 		sphereGeometry, [ darkMaterial, wireframeMaterial ] );
 	shape.position = spotlight.position;
 	scene.add( shape );
-	
-	var wireframeMaterial = new THREE.MeshBasicMaterial( 
-		{ color: 0xff0000, wireframe: true, transparent: true } ); 
-	var shape = THREE.SceneUtils.createMultiMaterialObject( 
+
+	var wireframeMaterial = new THREE.MeshBasicMaterial(
+		{ color: 0xff0000, wireframe: true, transparent: true } );
+	var shape = THREE.SceneUtils.createMultiMaterialObject(
 		sphereGeometry, [ darkMaterial, wireframeMaterial ] );
 	shape.position = spotlight2.position;
 	scene.add( shape );
-	
-	var wireframeMaterial = new THREE.MeshBasicMaterial( 
-		{ color: 0x0000ff, wireframe: true, transparent: true } ); 
-	var shape = THREE.SceneUtils.createMultiMaterialObject( 
+
+	var wireframeMaterial = new THREE.MeshBasicMaterial(
+		{ color: 0x0000ff, wireframe: true, transparent: true } );
+	var shape = THREE.SceneUtils.createMultiMaterialObject(
 		sphereGeometry, [ darkMaterial, wireframeMaterial ] );
 	shape.position = spotlight3.position;
 	scene.add( shape );
@@ -1213,7 +1215,7 @@ var cube;
 	/*var axes3 = new THREE.AxisHelper(300);
 	axes3.position = eje_cabina1.position;
 	scene.add(axes3);*/
-	
+
 //}
 
 
@@ -1224,16 +1226,16 @@ var arriba3 = true;
 
 //grupo_ruletacompleta.position.set(base_mesh);
 
-var render = function() 
-{	
+var render = function()
+{
 
-	
-	
 
-	if ( video.readyState === video.HAVE_ENOUGH_DATA ) 
+
+
+	if ( video.readyState === video.HAVE_ENOUGH_DATA )
 	{
 		videoImageContext.drawImage( video, 0, 0 );
-		if ( videoTexture ) 
+		if ( videoTexture )
 			videoTexture.needsUpdate = true;
 	}
 
@@ -1278,7 +1280,7 @@ var render = function()
 	else{
 		lightTarget3.position.z -= 3;
 	}
-	
+
 	camera.position.x = cam_xpos;
     camera.position.z = cam_zpos;
     camera.rotation.y = ang_rad;
@@ -1286,9 +1288,9 @@ var render = function()
     grupo_autocompleto.position.x = car_xpos;
     grupo_autocompleto.position.z = car_zpos;
     grupo_autocompleto.rotation.y = car_ang_rad;
-    
-    
-  	
+
+
+
   	grupo_ruedaruleta.rotation.x += 0.01;
   	eje_cabina1.rotation.x -= 0.01;
   	eje_cabina2.rotation.x -= 0.01;
@@ -1312,13 +1314,13 @@ var render = function()
   	//rotacion puertas
   	//ejecofre.rotation.x += 0.01;
   	//grupo_autocompleto.rotation.y += 0.01;
-  	
+
 
     requestAnimationFrame(render);
 	renderer.render( scene, camera );
 	//console.log(2);
-	 
-              
+
+
 }
 render();
 
